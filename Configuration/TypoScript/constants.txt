@@ -1,0 +1,15 @@
+
+module.tx_hfwuredirects_redirects {
+	view {
+		# cat=module.tx_hfwuredirects_redirects/file; type=string; label=Path to template root (BE)
+		templateRootPath = EXT:hfwu_redirects/Resources/Private/Templates/
+		# cat=module.tx_hfwuredirects_redirects/file; type=string; label=Path to template partials (BE)
+		partialRootPath = EXT:hfwu_redirects/Resources/Private/Partials/
+		# cat=module.tx_hfwuredirects_redirects/file; type=string; label=Path to template layouts (BE)
+		layoutRootPath = EXT:hfwu_redirects/Resources/Private/Layouts/
+	}
+	persistence {
+		# cat=module.tx_hfwuredirects_redirects//a; type=string; label=Default storage PID
+		storagePid =
+	}
+}

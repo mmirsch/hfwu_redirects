@@ -1,0 +1,13 @@
+
+ # Module configuration
+module.tx_hfwuredirects_web_hfwuredirectsredirects {
+	persistence {
+		storagePid = {$module.tx_hfwuredirects_redirects.persistence.storagePid}
+	}
+	view {
+		templateRootPaths.0 = {$module.tx_hfwuredirects_redirects.view.templateRootPath}
+		partialRootPaths.0 = {$module.tx_hfwuredirects_redirects.view.partialRootPath}
+		layoutRootPaths.0 = {$module.tx_hfwuredirects_redirects.view.layoutRootPath}
+	}
+}
+

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="de" datatype="plaintext" original="messages" date="2016-04-11T17:05:19Z" product-name="hfwu_redirects">
+		<header/>
+		<body>
+			<trans-unit id="tx_hfwuredirects_domain_model_redirects">
+				<source>Redirects</source>
+			</trans-unit>
+			<trans-unit id="tx_hfwuredirects_domain_model_redirects.title">
+				<source>Bezeichnung</source>
+			</trans-unit>
+			<trans-unit id="tx_hfwuredirects_domain_model_redirects.short_url">
+				<source>Short Url</source>
+			</trans-unit>
+			<trans-unit id="tx_hfwuredirects_domain_model_redirects.url_complete">
+				<source>Url komplett (TYPO3-Seite wird ignoriert)</source>
+			</trans-unit>
+			<trans-unit id="tx_hfwuredirects_domain_model_redirects.url_hash">
+				<source>Url Hash (um ein spezielles Akkordeon aufzuklappen)</source>
+			</trans-unit>
+			<trans-unit id="tx_hfwuredirects_domain_model_redirects.search_word">
+				<source>Suchwort (um Akkordeons aufzuklappen)</source>
+			</trans-unit>
+			<trans-unit id="tx_hfwuredirects_domain_model_redirects.is_qr_url">
+				<source>Eintrag ist Qr-Code</source>
+			</trans-unit>
+			<trans-unit id="tx_hfwuredirects_domain_model_redirects.page_id">
+				<source>TYPO3 Seiten-Id</source>
+			</trans-unit>
+			<trans-unit id="tx_hfwuredirects_domain_model_redirectcalls">
+				<source>Redirect Aufrufe</source>
+			</trans-unit>
+			<trans-unit id="tx_hfwuredirects_domain_model_redirectcalls.count">
+				<source>Anzahl</source>
+			</trans-unit>
+			<trans-unit id="tx_hfwuredirects_domain_model_redirectcalls.redirect">
+				<source>Redirect</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

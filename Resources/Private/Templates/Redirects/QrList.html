@@ -1,0 +1,24 @@
+{namespace vh=HFWU\HfwuRedirects\ViewHelpers}
+
+<f:layout name="Default" />
+<f:section name="content">
+	<h1>QR-Codes verwalten</h1>
+
+	<label for="suchfilter" class="filter_label" title="Anzeige filtern">
+		Anzeige filtern
+	</label>
+
+	<f:form.hidden id="deleteConfirmationMessage" value="Wollen Sie diesen Eintrag wirklich löschen?" />
+	<f:form.textfield
+			type="input"
+			value="<vh:RawAndRemoveXss>{filter}</vh:RawAndRemoveXss>"
+			class="qrFilter"
+			id="suchfilter" />
+	<f:form.button class="qrFilterReset" >Alle anzeigen</f:form.button>
+	<a title="Neuen Eintrag erstellen" href="{vh:Be.BackendCreateLink(tableName:'tx_hfwuredirects_domain_model_redirects',identifier:pid)}">
+		<f:form.button class="button" >Neuen Eintrag erstellen</f:form.button>
+	</a>
+	<div id="qr_list" xmlns:f="http://www.w3.org/1999/html">
+		<f:render partial="Redirects/AliasList" arguments="{redirects:redirects,siteUrl:siteUrl,pid:pid}" />
+	</div>
+</f:section>

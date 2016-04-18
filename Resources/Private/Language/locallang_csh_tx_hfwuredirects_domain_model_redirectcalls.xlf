@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="de" datatype="plaintext" original="messages" date="2016-04-11T17:03:28Z" product-name="hfwu_redirects">
+		<header/>
+		<body>
+			<trans-unit id="count.description">
+				<source>Anzahl</source>
+			</trans-unit>
+			<trans-unit id="redirect.description">
+				<source>Redirect</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

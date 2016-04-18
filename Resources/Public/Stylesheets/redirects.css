@@ -1,0 +1,79 @@
+#spinOverlay{
+    position:fixed;
+    display:block;
+    top:0;
+    left:0;
+    background:rgba(0,0,0,0.5)
+    url(/typo3/sysext/t3skin/images/spinner/big-f0f0f0.gif) center center no-repeat;
+    z-index:99
+}
+#spinOverlayMessage{
+    margin:auto;
+    position:absolute;
+    height:10px;
+    width:200px;
+    text-align:
+    center;
+    color:#fff
+}
+
+#redirect_list,
+#qr_list{
+    clear: both;
+    margin-top: 20px;
+}
+
+table.tx_hfwuredirects {
+    border-collapse: collapse;
+}
+
+table.tx_hfwuredirects th {
+    border: 1px solid #00305d;
+    padding: 4px 6px;
+    text-align: center;
+}
+
+table.tx_hfwuredirects td {
+    border: 1px solid #00305d;
+    padding: 2px 6px;
+}
+
+table.tx_hfwuredirects td.title {
+    background: #00305d;
+    border-bottom: 1px solid #fff;
+    padding: 0;
+    margin: 0;
+}
+
+table.tx_hfwuredirects tr:last-child td.title {
+    border-bottom: 1px solid #00305d;
+}
+
+table.tx_hfwuredirects td.title a {
+    color: #fff;
+    font-weight: bold;
+    padding: 2px 4px;
+    width: 100%;
+    margin: 0;
+    float: left;
+    text-decoration: none;
+}
+
+table.tx_hfwuredirects td.title a:hover,
+table.tx_hfwuredirects td.title a:focus {
+    background: #fff;
+    color: #00305d;
+}
+
+table.tx_hfwuredirects td.redirectCount {
+    text-align: right;
+    padding-right: 30px;
+}
+
+table.tx_hfwuredirects .btn {
+    padding: 0;
+}
+
+table.tx_hfwuredirects .deleteEntry {
+    cursor: pointer;
+}

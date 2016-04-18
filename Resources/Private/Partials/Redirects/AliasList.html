@@ -1,0 +1,34 @@
+{namespace vh=HFWU\HfwuRedirects\ViewHelpers}
+
+	<table  class="tx_hfwuredirects" >
+		<tr>
+			<th>Bezeichnung</th>
+			<th>Short-URL</th>
+			<th>TYPO3-Seite / Ziel-URL</th>
+			<th>Anz. Aufrufe</th>
+			<th>Aktionen</th>
+		</tr>
+
+		<f:for each="{redirects}" as="redirect">
+			<tr>
+				<td class="title"><a title="Eintrag bearbeiten" href="{vh:Be.BackendEditLink(tableName:'tx_hfwuredirects_domain_model_redirects',identifier:redirect.uid)}"> {redirect.title}</a></td>
+				<td class="shortUrl">{redirect.shortUrl}</td>
+				<td class="pageTitle">{redirect.pageTitle}</td>
+				<td class="redirectCount">{redirect.redirectCount}</td>
+				<td>
+					<f:link.action title="QR-Code erzeugen" action="showQrCode" arguments="{redirect : redirect}">
+					<f:image width="20" height="20" src="{f:uri.resource(path: 'Icons/qr.png')}" />
+					</f:link.action>
+
+					<a title="Redirect testen"  target="_blank" href="{siteUrl}{redirect.shortUrl}">
+					<img width="20" height="20" class="testRedirect" src="{f:uri.resource(path: 'Icons/actions-view.svg')}" />
+					</a>
+					<a title="Neuen Eintrag erstellen" href="{vh:Be.BackendCreateLink(tableName:'tx_hfwuredirects_domain_model_redirects',identifier:pid)}">
+						<img width="20" height="20" class="addRedirect" src="{f:uri.resource(path: 'Icons/actions-add.svg')}" />
+					</a>
+
+					<img width="20" height="20" data-uid="{redirect.uid}" class="deleteEntry" title="Eintrag löschen" src="{f:uri.resource(path: 'Icons/actions-delete.svg')}" />
+				</td>
+			</tr>
+		</f:for>
+	</table>

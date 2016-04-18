@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="de" datatype="plaintext" original="messages" date="2016-04-11T17:05:19Z" product-name="hfwu_redirects">
+		<header/>
+		<body>
+			<trans-unit id="title.description">
+				<source>Bezeichnung</source>
+			</trans-unit>
+			<trans-unit id="short_url.description">
+				<source>shortUrl</source>
+			</trans-unit>
+			<trans-unit id="url_complete.description">
+				<source>Url komplett (TYPO3-Seite wird ignoriert)</source>
+			</trans-unit>
+			<trans-unit id="url_hash.description">
+				<source>Url Hash (um ein spezielles Akkordeon aufzuklappen)</source>
+			</trans-unit>
+			<trans-unit id="search_word.description">
+				<source>Suchwort (um Akkordeons aufzuklappen)</source>
+			</trans-unit>
+			<trans-unit id="is_qr_url.description">
+				<source>Eintrag ist Qr-Code</source>
+			</trans-unit>
+			<trans-unit id="page_id.description">
+				<source>TYPO3 Seiten-Id</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
