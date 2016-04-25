@@ -36,6 +36,15 @@
 			<trans-unit id="tx_hfwuredirects_domain_model_redirectcalls.redirect">
 				<source>Redirect</source>
 			</trans-unit>
+			<trans-unit id="error_no_redirects_pid">
+        <source>Bitte wählen Sie ein Verzeichnis mit Redirects aus!</source>
+      </trans-unit>
+			<trans-unit id="error_no_qr_pid">
+        <source>Bitte wählen Sie ein Verzeichnis mit QR-Codes aus!</source>
+      </trans-unit>
+			<trans-unit id="error_no_redirect_entries">
+        <source>In diesem Verzeichnis gibt es keine Einträge!</source>
+      </trans-unit>
 		</body>
 	</file>
 </xliff>

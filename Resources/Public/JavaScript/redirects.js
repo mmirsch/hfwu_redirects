@@ -1,18 +1,24 @@
-/*
-(function($) {
-    $.fn.bindWithDelay = function( type, data, fn, timeout, throttle ) {
-        if ( $.isFunction( data ) ) {
+
+TYPO3.jQuery.fn.extend({
+    bindWithDelay: function( type, data, fn, timeout, throttle ) {
+
+        if ( TYPO3.jQuery.isFunction( data ) ) {
             throttle = timeout;
             timeout = fn;
             fn = data;
             data = undefined;
         }
-        fn.guid = fn.guid || ($.guid && $.guid++);
 
+        // Allow delayed function to be removed with fn in unbind function
+        fn.guid = fn.guid || (TYPO3.jQuery.guid && TYPO3.jQuery.guid++);
+
+        // Bind each separately so that each element has its own delay
         return this.each(function() {
+
             var wait = null;
+
             function cb() {
-                var e = $.extend(true, { }, arguments[0]);
+                var e = TYPO3.jQuery.extend(true, { }, arguments[0]);
                 var ctx = this;
                 var throttler = function() {
                     wait = null;
@@ -25,60 +31,38 @@
 
             cb.guid = fn.guid;
 
-            $(this).bind(type, data, cb);
+            TYPO3.jQuery(this).bind(type, data, cb);
         });
-    };
-})(jQuery);
-
-
-function executeAjax(url, dataType){
-    var result=''
-    $.ajax({
-        url: url,
-        dataType: dataType,
-        async: false,
-        beforeSend : function(){
-            processingAnimation('start','bitte warten');
-        },
-        success: function(data) {
-            result = data;
-        }
-    }).always(function() {
-        processingAnimation('stop');
-    });
-    return result;
-}
+    }
+});
 
 function processingAnimation(mode,message) {
-    var aHeight = $(window).height();
-    var aWidth = $(window).width();
+    var aHeight = TYPO3.jQuery(window).height();
+    var aWidth = TYPO3.jQuery(window).width();
 
     if (mode=='start') {
-        if ($('#spinOverlay').size()==0) {
-            $('body').append('<div id='spinOverlay'></div>');
-            $('#spinOverlay').css('height', aHeight).css('width', aWidth);
+        if (TYPO3.jQuery('#spinOverlay').size()==0) {
+            TYPO3.jQuery('body').append('<div id="spinOverlay"></div>');
+            TYPO3.jQuery('#spinOverlay').css('height', aHeight).css('width', aWidth);
             if (message) {
-                $('#spinOverlay').append('<div id='spinOverlayMessage'>' + message + '</div>');
-                var left = Math.ceil((aWidth - $('#spinOverlayMessage').width()) / 2);
-                var top = Math.ceil((aHeight - $('#spinOverlayMessage').height()) / 2)+30;
-                $('#spinOverlayMessage').css('left', left).css('top', top);
+                TYPO3.jQuery('#spinOverlay').append('<div id="spinOverlayMessage">' + message + '</div>');
+                var left = Math.ceil((aWidth - TYPO3.jQuery('#spinOverlayMessage').width()) / 2);
+                var top = Math.ceil((aHeight - TYPO3.jQuery('#spinOverlayMessage').height()) / 2)+30;
+                TYPO3.jQuery('#spinOverlayMessage').css('left', left).css('top', top);
             }
         }
-        $('#spinOverlay').show();
+        TYPO3.jQuery('#spinOverlay').show();
     } else if (mode=='stop') {
-        if ($('#spinOverlay')) {
-            $('#spinOverlay').remove();
+        if (TYPO3.jQuery('#spinOverlay')) {
+            TYPO3.jQuery('#spinOverlay').remove();
         }
-        if ($('#spinOverlayMessage')) {
-            $('#spinOverlayMessage').remove();
+        if (TYPO3.jQuery('#spinOverlayMessage')) {
+            TYPO3.jQuery('#spinOverlayMessage').remove();
         }
     }
 }
 
-*/
-
-
-function aliasListAjax(filter, isQrCode, listId) {
+function aliasListAjax(filter, pid, listId) {
     var ajaxUrl = TYPO3.settings.ajaxUrls['HfwuRedirects::aliasList'];
     TYPO3.jQuery.ajax({
         url: ajaxUrl,
@@ -86,7 +70,10 @@ function aliasListAjax(filter, isQrCode, listId) {
         dataType: 'html',
         data: {
             filter: filter,
-            is_qr_code: isQrCode
+            pid: pid
+        },
+        beforeSend : function(){
+            processingAnimation('start','bitte warten');
         },
         success: function (result) {
             TYPO3.jQuery(listId).html(result);
@@ -94,65 +81,51 @@ function aliasListAjax(filter, isQrCode, listId) {
         error: function (error) {
             TYPO3.jQuery(listId).html(error);
         }
+    }).always(function() {
+        processingAnimation('stop');
     });
 }
 
-function aliasDeleteAjax(id, filter, isQrCode, listId) {
+function aliasDeleteAjax(id, filter, pid, listId) {
     var ajaxUrl = TYPO3.settings.ajaxUrls['HfwuRedirects::deleteRedirectEntry'];
     TYPO3.jQuery.ajax({
         url:       ajaxUrl,
         type:      'GET',
         dataType:  'html',
         data: {
-            id: id,
-            is_qr_code: isQrCode
+            id: id
         },
-        success: function (result, isQrCode, listId) {
-            aliasListAjax(filter);
+        success: function (result) {
+            aliasListAjax(filter, pid, listId);
         },
-        error: function (error, isQrCode, listId) {
-            aliasListAjax(filter);
+        error: function (error) {
+            aliasListAjax(filter, pid, listId);
         }
     });
 }
 
-
 TYPO3.jQuery(document).ready(function() {
-    TYPO3.jQuery('.ajaxFilter').on('keyup', function (event) {
+    TYPO3.jQuery('.ajaxFilter').bindWithDelay('keyup', function (event) {
         var filter = TYPO3.jQuery(this).val();
-        if (filter.length>=3) {
-            aliasListAjax(filter,false,'#redirect_list');
+        if (filter.length>=1) {
+            var pid = TYPO3.jQuery('#pid').val();
+            aliasListAjax(filter,pid,'#redirect_list');
         }
-    });
+    },300);
     TYPO3.jQuery('.ajaxFilterReset').on('click', function (event) {
         TYPO3.jQuery('.ajaxFilter').val('');
-        aliasListAjax('',false,'#redirect_list');
+        var pid = TYPO3.jQuery('#pid').val();
+        aliasListAjax('',pid,'#redirect_list');
     });
     TYPO3.jQuery('#redirect_list').on('click', '.deleteEntry', function (event) {
         var confirmationMessage = TYPO3.jQuery('#deleteConfirmationMessage').val();
         if (confirm(confirmationMessage)) {
             var id = TYPO3.jQuery(this).attr('data-uid');
             var filter = TYPO3.jQuery('.ajaxFilter').val();
-            aliasDeleteAjax(id,filter,false,'#redirect_list');
+            var pid = TYPO3.jQuery('#pid').val();
+            aliasDeleteAjax(id,filter, pid, '#redirect_list');
         }
     });
-    TYPO3.jQuery('.qrFilter').on('keyup', function (event) {
-        var filter = TYPO3.jQuery(this).val();
-        if (filter.length>=3) {
-            aliasListAjax(filter,true,'#qr_list');
-        }
-    });
-    TYPO3.jQuery('.qrFilterReset').on('click', function (event) {
-        TYPO3.jQuery('.qrFilter').val('');
-        aliasListAjax('',true,'#qr_list');
-    });
-    TYPO3.jQuery('#qr_list').on('click', '.deleteEntry', function (event) {
-        var confirmationMessage = TYPO3.jQuery('#deleteConfirmationMessage').val();
-        if (confirm(confirmationMessage)) {
-            var id = TYPO3.jQuery(this).attr('data-uid');
-            var filter = TYPO3.jQuery('.qrFilter').val();
-            aliasDeleteAjax(id,filter,true,'#qr_list');
-        }
-    });
+
 
 });

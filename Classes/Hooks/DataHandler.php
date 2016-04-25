@@ -9,7 +9,7 @@ class DataHandler {
 
 
 	/**
-	 * Generate a different preview link     *
+	 * Manipulate short_url and url_complete
 	 *
 	 * @param string $status status
 	 * @param string $table table name
@@ -101,7 +101,7 @@ class DataHandler {
 	}
 
 	/**
-	 * For non admins selecting is chenged to qr-redirect records only
+	 * For non admins selecting is changed to qr-redirect records only
 	 *
 	 * @param array $queryParts
 	 * @return void

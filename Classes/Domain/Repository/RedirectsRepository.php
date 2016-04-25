@@ -36,12 +36,18 @@ class RedirectsRepository extends Repository {
 	/**
 	 * Life cycle method.
 	 *
+	 * @param int $pid
 	 * @return void
 	 */
-	public function initializeObject() {
-		$querySettings = $this->objectManager->get('TYPO3\\CMS\\Extbase\\Persistence\\Generic\\Typo3QuerySettings');
-		// don't add the pid constraint
-		$querySettings->setRespectStoragePage(FALSE);
+	public function initializeObject($pid=0) {
+		/**@var $querySettings \TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings */
+		$querySettings = $this->objectManager->get('TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings');
+		if ($pid) {
+			$querySettings->setStoragePageIds(array($pid));
+		} else {
+			// don't add the pid constraint
+			$querySettings->setRespectStoragePage(FALSE);
+		}
 		$this->setDefaultQuerySettings($querySettings);
 	}
 
@@ -49,7 +55,7 @@ class RedirectsRepository extends Repository {
 	 * @return QueryResultInterface|array
 	 */
 	public function getPid() {
-		$this->initializeObject();
+		$this->initializeObject(false);
 		/**@var $resultElem \HFWU\HfwuRedirects\Domain\Model\Redirects */
 		$resultElem = $this->findAll()->getFirst();
 		return $resultElem->getPid();
@@ -58,36 +64,58 @@ class RedirectsRepository extends Repository {
 
 	/**
 	 * @param $filter string
+	 * @param int $pid
 	 * @return QueryResultInterface|array
 	 */
-	public function findQrCodes($filter) {
-		return $this->findRedirects($filter, true);
-	}
-
-	/**
-	 * @param $filter string
-	 * @return QueryResultInterface|array
-	 */
-	public function findRedirects($filter, $qrCodesOnly=false) {
-		$this->initializeObject();
+	public function findRedirects($filter, $pid)
+	{
+		$this->initializeObject($pid);
 		$query = $this->createQuery();
 		$queryDefinition = $query->logicalOr(
 			$query->like('shortUrl', '%' . $filter . '%'),
 			$query->logicalOr(
-				$query->like('urlComplete', '%' . $filter . '%'),
-				$query->like('title', '%' . $filter . '%')
+				$query->like('title', '%' . $filter . '%'),
+				$query->logicalOr(
+					$query->like('urlComplete', '%' . $filter . '%'),
+					$query->like('pageId.title', '%' . $filter . '%')
+				)
 			)
 		);
-		if ($qrCodesOnly) {
-			$queryDefinition = $query->logicalAnd(
-				$query->equals('isQrUrl', true),
-				$queryDefinition
-			);
-		}
 		$queryResult = $query->matching(
 			$queryDefinition
 		)->execute();
-		return $this->additionalInfos($queryResult);
+		if ($queryResult->count() > 0) {
+			return $this->additionalInfos($queryResult);
+		} else {
+			return NULL;
+		}
+	}
+		/**
+		 * Find all redirects containing searchword
+		 * @param $filter string
+		 * @param int $pid
+		 * @return QueryResultInterface|array
+		 */
+		public function findRedirectsWithSearchWord($filter, $pid) {
+			$query = $this->createQuery();
+			$sql = 'select tx_hfwuredirects_domain_model_redirects.*';
+			$sql .= ' from tx_hfwuredirects_domain_model_redirects LEFT JOIN pages ON tx_hfwuredirects_domain_model_redirects.page_id=pages.uid';
+			$sql .= ' where ( tx_hfwuredirects_domain_model_redirects.title LIKE "%' . $filter . '%" OR ' .
+												'tx_hfwuredirects_domain_model_redirects.short_url LIKE "%' . $filter . '%" OR ' .
+												'tx_hfwuredirects_domain_model_redirects.url_complete LIKE "%' . $filter . '%" OR ' .
+												'pages.title LIKE "%' . $filter . '%")';
+			;
+			$sql .= ' AND tx_hfwuredirects_domain_model_redirects.hidden = 0';
+			$sql .= ' AND tx_hfwuredirects_domain_model_redirects.deleted = 0';
+			$sql .= ' AND tx_hfwuredirects_domain_model_redirects.pid = ' . $pid;
+			$sql .= ' AND pages.hidden = 0';
+			$sql .= ' AND pages.deleted = 0';
+			$queryResult = $query->statement($sql)->execute();
+			if ($queryResult->count() > 0) {
+				return $this->additionalInfos($queryResult);
+			} else {
+				return NULL;
+			}
 	}
 
 	/**

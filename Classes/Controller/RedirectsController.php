@@ -4,10 +4,13 @@ namespace HFWU\HfwuRedirects\Controller;
 use HFWU\HfwuRedirects\Domain\Repository\RedirectsRepository;
 use HFWU\HfwuRedirects\Domain\Model\Redirects;
 
+use TYPO3\CMS\Core\Messaging\AbstractMessage;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 
 /***************************************************************
@@ -56,7 +59,7 @@ class RedirectsController extends ActionController {
      * @return void
      */
     public function aliasListAction() {
-        $this->assignView(false);
+        $this->assignView();
     }
 
     /**
@@ -69,38 +72,36 @@ class RedirectsController extends ActionController {
     }
 
     /**
-     * action QrList
-     *
-     * @return void
-     */
-    public function qrListAction() {
-        $this->assignView(true);
-    }
-
-    /**
-     * action QrListAjax
-     *
-     * @return void
-     */
-    public function qrListAjaxAction() {
-        $this->qrListAction();
-    }
-
-    /**
      * assign view depending qrlist flag
      * @param bool $qrRedirectsOnly
      * @return void
      */
-    public function assignView($qrRedirectsOnly=false ) {
-        $filter = $this->getArgument('filter');
-        /** @var QueryResultInterface $redirects */
-        $redirects = $this->getResultList($filter, $qrRedirectsOnly);
-        $siteUrl = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
-        $pid = $this->redirectsRepository->getPid();
-        $this->view->assign('siteUrl', $siteUrl);
-        $this->view->assign('filter', $filter);
-        $this->view->assign('pid', $pid);
-        $this->view->assign('redirects', $redirects);
+    public function assignView( ) {
+        $pid = GeneralUtility::_GP('id');
+        if (empty($pid)) {
+            $pid = $this->getArgument('pid');
+        }
+        if (!$pid) {
+            $this->addFlashMessage(
+              LocalizationUtility::translate('error_no_redirects_pid', $this->extensionName), '', AbstractMessage::ERROR
+            );
+        } else {
+            $filter = $this->getArgument('filter');
+            /** @var QueryResultInterface $redirects */
+            $redirects = $this->redirectsRepository->findRedirectsWithSearchWord($filter, $pid);
+            if (count($redirects) > 0) {
+                $siteUrl = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
+                $this->view->assign('siteUrl', $siteUrl);
+                $this->view->assign('filter', $filter);
+                $this->view->assign('pid', $pid);
+                $this->view->assign('redirects', $redirects);
+            } else {
+                $this->addFlashMessage(
+                  LocalizationUtility::translate('error_no_redirect_entries', $this->extensionName), '', AbstractMessage::ERROR
+                );
+            }
+        }
+
     }
 
     /**
@@ -119,21 +120,6 @@ class RedirectsController extends ActionController {
         return $filter;
     }
 
-    /**
-     * get redirects by filter
-     *
-     * @param string $eingabe
-     * @param bool $qrRedirectsOnly
-     * @return QueryResultInterface|array
-     */
-    protected function getResultList($filter, $qrRedirectsOnly) {
-        if ($qrRedirectsOnly) {
-            $redirects = $this->redirectsRepository->findQrCodes($filter);
-        } else {
-            $redirects = $this->redirectsRepository->findRedirects($filter);
-        }
-        return $redirects;
-    }
 
     /**
      * action deleteRedirectEntryAjax
@@ -148,7 +134,6 @@ class RedirectsController extends ActionController {
 
     }
 
-
     /**
      * action showQrCode
      *
@@ -162,7 +147,6 @@ class RedirectsController extends ActionController {
         $completeUrl = $siteUrl . $shortUrl;
         $this->createQrCode($completeUrl, $title);
     }
-
 
     /**
      * action list
@@ -255,7 +239,7 @@ class RedirectsController extends ActionController {
 
         $qrCode->setText($url)
           ->setSize($size)
-          ->setPadding(50)
+          ->setPadding(40)
           ->setErrorCorrection($errorCorrection)
           ->setForegroundColor(array('r' => 0, 'g' => 48, 'b' => 94, 'a' => 0))
           ->setBackgroundColor(array('r' => 255, 'g' => 255, 'b' => 255, 'a' => 0));

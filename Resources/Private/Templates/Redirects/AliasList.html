@@ -3,23 +3,25 @@
 <f:layout name="Default" />
 <f:section name="content">
 	<h1>Redirects verwalten</h1>
+	<f:flashMessages class="message" />
+	<f:if condition="{0:pid,1:redirects} != {0:'',1:''}">
+		<label for="suchfilter" class="filter_label" title="Anzeige filtern">
+			Anzeige filtern
+		</label>
 
-	<label for="suchfilter" class="filter_label" title="Anzeige filtern">
-		Anzeige filtern
-	</label>
-
-	<f:form.hidden id="deleteConfirmationMessage" value="Wollen Sie diesen Eintrag wirklich löschen?" />
-	<f:form.textfield
-		type="input"
-		value="<vh:RawAndRemoveXss>{filter}</vh:RawAndRemoveXss>"
-		class="ajaxFilter"
-		id="suchfilter" />
-	<f:form.button class="ajaxFilterReset" >Alle anzeigen</f:form.button>
-	<a title="Neuen Eintrag erstellen" href="{vh:Be.BackendCreateLink(tableName:'tx_hfwuredirects_domain_model_redirects',identifier:pid)}">
-		<f:form.button class="button" >Neuen Eintrag erstellen</f:form.button>
-	</a>
-
-	<div id="redirect_list" xmlns:f="http://www.w3.org/1999/html">
-		<f:render partial="Redirects/AliasList" arguments="{redirects:redirects,siteUrl:siteUrl,pid:pid}}" />
-	</div>
+		<f:form.hidden id="deleteConfirmationMessage" value="Wollen Sie diesen Eintrag wirklich löschen?" />
+		<f:form.hidden id="pid" value="{pid}" />
+		<f:form.textfield
+				type="input"
+				value="<vh:RawAndRemoveXss>{filter}</vh:RawAndRemoveXss>"
+				class="ajaxFilter"
+				id="suchfilter" />
+		<f:form.button class="ajaxFilterReset" >Alle anzeigen</f:form.button>
+		<a title="Neuen Eintrag erstellen" href="{vh:Be.BackendCreateLink(tableName:'tx_hfwuredirects_domain_model_redirects',identifier:pid)}">
+			<f:form.button class="button" >Neuen Eintrag erstellen</f:form.button>
+		</a>
+		<div id="redirect_list" xmlns:f="http://www.w3.org/1999/html">
+			<f:render partial="Redirects/AliasList" arguments="{redirects:redirects,siteUrl:siteUrl,pid:pid}" />
+		</div>
+	</f:if>
 </f:section>

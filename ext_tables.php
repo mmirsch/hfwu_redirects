@@ -14,7 +14,7 @@ if (TYPO3_MODE === 'BE') {
 		'redirects',	// Submodule key
 		'',						// Position
 		array(
-			'Redirects' => 'qrList, qrListAjax, aliasList, aliasListAjax, deleteRedirectEntryAjax, showQrCode, list',
+			'Redirects' => 'aliasList, aliasListAjax, deleteRedirectEntryAjax, showQrCode, list',
 		),
 		array(
 			'access' => 'user,group',

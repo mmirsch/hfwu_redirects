@@ -11,7 +11,6 @@ return array(
 		'dividers2tabs' => TRUE,
 		'versioningWS' => 2,
 		'versioning_followPages' => TRUE,
-		'requestUpdate' => 'is_qr_url',
 
 		'languageField' => 'sys_language_uid',
 		'transOrigPointerField' => 'l10n_parent',
@@ -22,7 +21,7 @@ return array(
 			'starttime' => 'starttime',
 			'endtime' => 'endtime',
 		),
-		'searchFields' => 'short_url,url_complete,url_hash,search_word,is_qr_url,page_id,',
+		'searchFields' => 'short_url,url_complete,url_hash,search_word,',
 		'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('hfwu_redirects') . 'Resources/Public/Icons/tx_hfwuredirects_domain_model_redirects.gif'
 	),
 	'interface' => array(
@@ -89,11 +88,7 @@ return array(
 			'exclude' => 1,
 			'label' => 'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_db.xlf:tx_hfwuredirects_domain_model_redirects.is_qr_url',
 			'config' => array(
-				'type' => 'select',
-				'items' => array(
-					array('Nein', 0),
-					array('Ja', 1),
-				),
+				'type' => 'check',
 				'default' => 1,
 			)
 		),
@@ -105,7 +100,6 @@ return array(
 				'size' => 30,
 				'eval' => 'trim,alphanum_x'
 			),
-			'displayCond' => 'FIELD:is_qr_url:=:0',
 		),
 		'url_complete' => array(
 			'exclude' => 1,
@@ -137,12 +131,37 @@ return array(
 		'page_id' => array(
 			'exclude' => 1,
 			'label' => 'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_db.xlf:tx_hfwuredirects_domain_model_redirects.page_id',
+			/*
 			'config' => array(
 				'type' => 'input',
 				'size' => 30,
 				'eval' => 'int'
 			),
+			*/
+			'config' => array(
+				'type' => 'group',
+				'internal_type' => 'db',
+				'allowed' => 'pages',
+				'minitems' => 0,
+				'maxitems' => 1,
+				'size' => 1,
+				'appearance' => array(
+					'collapseAll' => 0,
+					'levelLinksPosition' => 'top',
+					'showSynchronizationLink' => 1,
+					'showPossibleLocalizationRecords' => 1,
+					'showAllLocalizationLink' => 1
+				),
+				'wizards' => array(
+					'suggest' => array(
+						'type' => 'suggest',
+						'default' => array(
+							'searchWholePhrase' => 1,
+						),
+					),
+				),
+			),
+
 		),
-		
 	),
 );

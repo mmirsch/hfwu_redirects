@@ -35,14 +35,9 @@ class AjaxDispatcher {
 	 * Request all redirects that match the filter given in argument "filter"
 	 */
 	public function dispatchAliasList() {
+		$pid = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('pid');
 		$filter = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('filter');
-		$isQrCode = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('is_qr_code');
-
-		if ($isQrCode) {
-			$action = 'qrListAjax';
-		} else {
-			$action = 'aliasListAjax';
-		}
+		$action = 'aliasListAjax';
 		$bootstrapConfiguration = array(
 			'extensionName'                 => 'HfwuRedirects',
 			'pluginName'                    => 'web_HfwuRedirectsRedirects',
@@ -52,7 +47,7 @@ class AjaxDispatcher {
 				'Redirects'     => array($action)
 			)
 		);
-		$arguments = array('action'=>$action, 'filter'=>$filter);
+		$arguments = array('action'=>$action, 'filter'=>$filter, 'pid'=>$pid);
 
 		$result = $this->bootstrap($bootstrapConfiguration, $arguments);
 		// Display the final result on screen.

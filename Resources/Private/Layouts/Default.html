@@ -13,14 +13,12 @@
 					<f:be.menus.actionMenu>
 						<f:if condition="{vh:Be.IsAdmin()}">
 							<f:then>
-								<f:be.menus.actionMenuItem label="QR-Codes verwalten" action="qrList" controller="Redirects" />>
 								<f:be.menus.actionMenuItem label="Redirects verwalten" action="aliasList" controller="Redirects" />
 							</f:then>
 							<f:else>
-								<f:be.menus.actionMenuItem label="QR-Codes verwalten" action="qrList" controller="Redirects" />>
+								<f:be.menus.actionMenuItem label="QR-Codes verwalten" action="aliasList" controller="Redirects" />>
 							</f:else>
 						</f:if>
-
 					</f:be.menus.actionMenu>
 				</div>
 				<div class="right">
