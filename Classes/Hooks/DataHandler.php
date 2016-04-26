@@ -63,53 +63,62 @@ class DataHandler {
 		}
 	}
 
+	//processDatamap_postProcessFieldArray($status, $table, $id, $fieldArray, $this);
 	/**
 	 * Prevent saving record where neither page_id nor url_complete is entered
 	 *
-	 * @param array $fieldArray
+	 * @param string $status
 	 * @param string $table
 	 * @param int $id
+	 * @param array $fieldArray
 	 * @param $dataHandler \TYPO3\CMS\Core\DataHandling\DataHandler
 	 * @return void
 	 */
-	public function processDatamap_preProcessFieldArray(
-		&$fieldArray,
+	public function processDatamap_postProcessFieldArray (
+		$status,
 		$table,
 		$id,
+		&$fieldArray,
 		\TYPO3\CMS\Core\DataHandling\DataHandler $dataHandler) {
 		if ($table === 'tx_hfwuredirects_domain_model_redirects') {
 			$error = false;
 			// check pageId or urlComplete is filled
-			if (empty($fieldArray['page_id']) && empty($fieldArray['url_complete'])) {
-				$dataHandler->log($table, $id, 2, 0, 1,
+			if ($status === 'new' && empty($fieldArray['page_id']) && empty($fieldArray['url_complete'])) {
+				$dataHandler->log($table, $id, 1, 0, 1,
 					'Daten unvollständig: es muss entweder das Feld "pageId" oder das Feld "urlComplete" ausgefüllt weden.',
 					0, [$table]);
 				$error = true;
 
 			}
-			if ($fieldArray['is_qr_url'] === '0' &&
-					isset($fieldArray['short_url']) && $fieldArray['short_url'] === '') {
-				$dataHandler->log($table, $id, 2, 0, 2,
-					'Daten unvollständig: das Feld "shortUrl" muss ausgefüllt werden.',
-					0, [$table]);
-				// $error = true;
+			if (isset($fieldArray['short_url'])) {
+				if ($fieldArray['is_qr_url'] === '0' && $fieldArray['short_url'] === '') {
+					$dataHandler->log($table, $id, 1, 0, 1,
+						'Daten unvollständig: das Feld "shortUrl" muss ausgefüllt werden.',
+						0, [$table]);
+					$error = true;
+				} else if ($fieldArray['short_url'] !== '') {
+					/**@var $objectManager \TYPO3\CMS\Extbase\Object\ObjectManager */
+					$objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
+					/**@var $redirectsRepository \HFWU\HfwuRedirects\Domain\Repository\RedirectsRepository */
+					$redirectsRepository = $objectManager->get('HFWU\HfwuRedirects\Domain\Repository\RedirectsRepository');
+					/**@var $redirect \HFWU\HfwuRedirects\Domain\Model\Redirects */
+					$redirect = $redirectsRepository->findByShortUrl($fieldArray['short_url']);
+					if ($status === 'new') {
+						$maxcount = 0;
+					} else {
+						$maxcount = 1;
+					}
+					if (($redirect->count()>$maxcount)) {
+						$dataHandler->log($table, $id, 1, 0, 1,
+							'Der Eintrag "' . $fieldArray['short_url'] . '" als shortUrl existiert bereits.',
+							0, [$table]);
+						$error = true;
+					}
+				}
 			}
 			if ($error) {
 				$fieldArray = [];
 			}
-		}
-	}
-
-	/**
-	 * For non admins selecting is changed to qr-redirect records only
-	 *
-	 * @param array $queryParts
-	 * @return void
-	 */
-
-	public function makeQueryArray_post(&$queryParts) {
-		if (!empty($queryParts['WHERE']) && ($queryParts['FROM'] === 'tx_hfwuredirects_domain_model_redirects') && !BackendUtility::isBackendAdmin()) {
-			$queryParts['WHERE'] .= ' AND is_qr_url = 1';
 		}
 	}
 

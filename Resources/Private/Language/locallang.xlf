@@ -37,7 +37,7 @@
 				<source>Redirect</source>
 			</trans-unit>
 			<trans-unit id="error_no_redirects_pid">
-        <source>Bitte wählen Sie ein Verzeichnis mit Redirects aus!</source>
+        <source>Bitte wählen Sie ein Verzeichnis mit QR-Codes/Redirects aus!</source>
       </trans-unit>
 			<trans-unit id="error_no_qr_pid">
         <source>Bitte wählen Sie ein Verzeichnis mit QR-Codes aus!</source>

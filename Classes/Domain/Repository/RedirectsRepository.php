@@ -75,10 +75,7 @@ class RedirectsRepository extends Repository {
 			$query->like('shortUrl', '%' . $filter . '%'),
 			$query->logicalOr(
 				$query->like('title', '%' . $filter . '%'),
-				$query->logicalOr(
-					$query->like('urlComplete', '%' . $filter . '%'),
-					$query->like('pageId.title', '%' . $filter . '%')
-				)
+				$query->like('urlComplete', '%' . $filter . '%')
 			)
 		);
 		$queryResult = $query->matching(
@@ -96,20 +93,23 @@ class RedirectsRepository extends Repository {
 		 * @param int $pid
 		 * @return QueryResultInterface|array
 		 */
-		public function findRedirectsWithSearchWord($filter, $pid) {
+		public function findRedirectsWithSearchWord($filter, $pid, $limit=50) {
 			$query = $this->createQuery();
-			$sql = 'select tx_hfwuredirects_domain_model_redirects.*';
-			$sql .= ' from tx_hfwuredirects_domain_model_redirects LEFT JOIN pages ON tx_hfwuredirects_domain_model_redirects.page_id=pages.uid';
-			$sql .= ' where ( tx_hfwuredirects_domain_model_redirects.title LIKE "%' . $filter . '%" OR ' .
+			$sql = 'SELECT tx_hfwuredirects_domain_model_redirects.*';
+			$sql .= ' FROM tx_hfwuredirects_domain_model_redirects';
+			$sql .= ' LEFT JOIN pages ON tx_hfwuredirects_domain_model_redirects.page_id=pages.uid';
+			$sql .= ' WHERE ( tx_hfwuredirects_domain_model_redirects.title LIKE "%' . $filter . '%" OR ' .
 												'tx_hfwuredirects_domain_model_redirects.short_url LIKE "%' . $filter . '%" OR ' .
 												'tx_hfwuredirects_domain_model_redirects.url_complete LIKE "%' . $filter . '%" OR ' .
 												'pages.title LIKE "%' . $filter . '%")';
-			;
+
 			$sql .= ' AND tx_hfwuredirects_domain_model_redirects.hidden = 0';
 			$sql .= ' AND tx_hfwuredirects_domain_model_redirects.deleted = 0';
 			$sql .= ' AND tx_hfwuredirects_domain_model_redirects.pid = ' . $pid;
 			$sql .= ' AND pages.hidden = 0';
 			$sql .= ' AND pages.deleted = 0';
+			$sql .= ' ORDER BY tx_hfwuredirects_domain_model_redirects.title';
+			$sql .= ' LIMIT 0,' . $limit;
 			$queryResult = $query->statement($sql)->execute();
 			if ($queryResult->count() > 0) {
 				return $this->additionalInfos($queryResult);
@@ -126,7 +126,7 @@ class RedirectsRepository extends Repository {
 		/**@var $redirectCallsRepository \HFWU\HfwuRedirects\Domain\Repository\RedirectCallsRepository */
 		$redirectCallsRepository = $this->objectManager->get('HFWU\HfwuRedirects\Domain\Repository\RedirectCallsRepository');
 
-		$resultList = array();
+		$resultlist = array();
 		/**@var $resultElem \HFWU\HfwuRedirects\Domain\Model\Redirects */
 		foreach($queryResult as $resultElem) {
 			$urlComplete = $resultElem->getUrlComplete();
@@ -145,9 +145,9 @@ class RedirectsRepository extends Repository {
 				$redirectCount = $redirectCalls->getCount();
 			}
 			$resultElem->setRedirectCount($redirectCount);
-			$resultList[] = $resultElem;
+			$resultlist[] = $resultElem;
 		}
-		return $resultList;
+		return $resultlist;
 	}
 
 

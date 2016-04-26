@@ -53,6 +53,17 @@ class RedirectsController extends ActionController {
      */
     protected $redirectsRepository = NULL;
 
+    /**
+     * redirectsRepository
+     *
+     * @var $currentExtensionConfig array
+     */
+    protected $currentExtensionConfig = NULL;
+
+    public function __construct() {
+        $this->currentExtensionConfig = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['hfwu_redirects']);
+    }
+
      /**
      * action AliasList
      *
@@ -81,15 +92,19 @@ class RedirectsController extends ActionController {
         if (empty($pid)) {
             $pid = $this->getArgument('pid');
         }
+        $limit = $this->getArgument('limit');
+        if (empty($limit)) {
+            $limit = $this->currentExtensionConfig['limit'];
+        }
         if (!$pid) {
             $this->addFlashMessage(
-              LocalizationUtility::translate('error_no_redirects_pid', $this->extensionName), '', AbstractMessage::ERROR
+              LocalizationUtility::translate('error_no_redirects_pid', 'hfwu_redirects'), '', AbstractMessage::ERROR
             );
         } else {
             $filter = $this->getArgument('filter');
             /** @var QueryResultInterface $redirects */
-            $redirects = $this->redirectsRepository->findRedirectsWithSearchWord($filter, $pid);
-            if (count($redirects) > 0) {
+            $redirects = $this->redirectsRepository->findRedirectsWithSearchWord($filter, $pid, $limit);
+            if (!empty($redirects)) {
                 $siteUrl = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
                 $this->view->assign('siteUrl', $siteUrl);
                 $this->view->assign('filter', $filter);
@@ -97,7 +112,7 @@ class RedirectsController extends ActionController {
                 $this->view->assign('redirects', $redirects);
             } else {
                 $this->addFlashMessage(
-                  LocalizationUtility::translate('error_no_redirect_entries', $this->extensionName), '', AbstractMessage::ERROR
+                  LocalizationUtility::translate('error_no_redirect_entries','hfwu_redirects'), '', AbstractMessage::INFO
                 );
             }
         }
@@ -146,83 +161,6 @@ class RedirectsController extends ActionController {
         $siteUrl = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
         $completeUrl = $siteUrl . $shortUrl;
         $this->createQrCode($completeUrl, $title);
-    }
-
-    /**
-     * action list
-     *
-     * @return void
-     */
-    public function listAction() {
-        $redirects = $this->redirectsRepository->findAll();
-        $this->view->assign('redirects', $redirects);
-    }
-    
-    /**
-     * action show
-     *
-     * @param Redirects $redirects
-     * @return void
-     */
-    public function showAction(Redirects $redirects) {
-        $this->view->assign('redirects', $redirects);
-    }
-    
-    /**
-     * action new
-     *
-     * @return void
-     */
-    public function newAction() {
-        
-    }
-    
-    /**
-     * action create
-     *
-     * @param Redirects $newRedirects
-     * @return void
-     */
-    public function createAction(Redirects $newRedirects)     {
-        $this->addFlashMessage('The object was created. Please be aware that this action is publicly accessible unless you implement an access check. See http://wiki.typo3.org/T3Doc/Extension_Builder/Using_the_Extension_Builder#1._Model_the_domain', '', \TYPO3\CMS\Core\Messaging\AbstractMessage::ERROR);
-        $this->redirectsRepository->add($newRedirects);
-        $this->redirect('list');
-    }
-    
-    /**
-     * action edit
-     *
-     * @param Redirects $redirects
-     * @ignorevalidation $redirects
-     * @return void
-     */
-    public function editAction(Redirects $redirects) {
-        $this->view->assign('redirects', $redirects);
-    }
-    
-    /**
-     * action update
-     *
-     * @param Redirects $redirects
-     * @return void
-     */
-    public function updateAction(Redirects $redirects) {
-        $this->addFlashMessage('The object was updated. Please be aware that this action is publicly accessible unless you implement an access check. See http://wiki.typo3.org/T3Doc/Extension_Builder/Using_the_Extension_Builder#1._Model_the_domain', '', \TYPO3\CMS\Core\Messaging\AbstractMessage::ERROR);
-        $this->redirectsRepository->update($redirects);
-        $this->redirect('list');
-    }
-    
-    /**
-     * action delete
-     *
-     * @param Redirects $redirects
-     * @return void
-     */
-    public function deleteAction(Redirects $redirects)
-    {
-        $this->addFlashMessage('The object was deleted. Please be aware that this action is publicly accessible unless you implement an access check. See http://wiki.typo3.org/T3Doc/Extension_Builder/Using_the_Extension_Builder#1._Model_the_domain', '', \TYPO3\CMS\Core\Messaging\AbstractMessage::ERROR);
-        $this->redirectsRepository->remove($redirects);
-        $this->redirect('list');
     }
 
     public function createQrCode($url, $title, $size=400) {

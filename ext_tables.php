@@ -14,7 +14,7 @@ if (TYPO3_MODE === 'BE') {
 		'redirects',	// Submodule key
 		'',						// Position
 		array(
-			'Redirects' => 'aliasList, aliasListAjax, deleteRedirectEntryAjax, showQrCode, list',
+			'Redirects' => 'aliasList, aliasListAjax, deleteRedirectEntryAjax, showQrCode',
 		),
 		array(
 			'access' => 'user,group',
@@ -23,10 +23,7 @@ if (TYPO3_MODE === 'BE') {
 		)
 	);
 
-
 }
-
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($_EXTKEY, 'Configuration/TypoScript', 'HFWU Redirects');
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr('tx_hfwuredirects_domain_model_redirects', 'EXT:hfwu_redirects/Resources/Private/Language/locallang_csh_tx_hfwuredirects_domain_model_redirects.xlf');
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_hfwuredirects_domain_model_redirects');
@@ -45,5 +42,3 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['AJAX']['HfwuRedirects::deleteRedirectEntry'] 
 );
 
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['hfwu_redirects'] = 'HFWU\HfwuRedirects\Hooks\DataHandler';
-
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['typo3/class.db_list.inc']['makeQueryArray']['hfwu_redirects'] = 'HFWU\HfwuRedirects\Hooks\DataHandler';
