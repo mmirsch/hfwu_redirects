@@ -1,5 +1,6 @@
 {namespace vh=HFWU\HfwuRedirects\ViewHelpers}
-	<table  class="tx_hfwuredirects" >
+
+	<table class="tx_hfwuredirects" >
 		<tr>
 			<th>Bezeichnung</th>
 			<th>Short-URL</th>
@@ -10,24 +11,35 @@
 
 		<f:for each="{redirects}" as="redirect">
 			<tr>
-				<td class="title"><a title="Eintrag bearbeiten" href="{vh:Be.BackendEditLink(tableName:'tx_hfwuredirects_domain_model_redirects',identifier:redirect.uid)}"> {redirect.title}</a></td>
+				<td class="title">{redirect.title}</td>
 				<td class="shortUrl">{redirect.shortUrl}</td>
-				<td class="pageTitle">{redirect.pageTitle}</td>
+				<f:if condition="{redirect.urlComplete}">
+					<f:then>
+						<td class="pageTitle">{redirect.urlComplete}</td>
+					</f:then>
+					<f:else>
+						<td class="pageTitle">{redirect.page.title}</td>
+					</f:else>
+				</f:if>
 				<td class="redirectCount">{redirect.redirectCount}</td>
 				<td>
-					<f:link.action title="QR-Code erzeugen" action="showQrCode" arguments="{redirect : redirect}">
-					<f:image width="20" height="20" src="{f:uri.resource(path: 'Icons/qr.png')}" />
-					</f:link.action>
-
-					<a title="Redirect testen"  target="_blank" href="{siteUrl}{redirect.shortUrl}">
-					<img width="20" height="20" class="testRedirect" src="{f:uri.resource(path: 'Icons/actions-view.svg')}" />
+					<a href="#" target="_blank" data-uid="{redirect.uid}" class="img_link showQrCode" title="{f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.create_qr_code\')}">
+					<img width="20" height="20" src="{vh:Be.UriResource(path: 'Icons/qr.png')}" />
 					</a>
-					<a title="Neuen Eintrag erstellen" href="{vh:Be.BackendCreateLink(tableName:'tx_hfwuredirects_domain_model_redirects',identifier:pid)}">
-						<img width="20" height="20" class="addRedirect" src="{f:uri.resource(path: 'Icons/actions-add.svg')}" />
+					<a title="{f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.test_redirect\')}"
+					   target="_blank" class="img_link" href="{siteUrl}{redirect.shortUrl}?redirect_test=1">
+					<img width="20" height="20" class="testRedirect" src="{vh:Be.UriResource(path: 'Icons/actions-view.svg')}" />
 					</a>
-
-					<img width="20" height="20" data-uid="{redirect.uid}" class="deleteEntry" title="Eintrag löschen" src="{f:uri.resource(path: 'Icons/actions-delete.svg')}" />
+					<f:if condition="{redirect.access}">
+						<a title="{f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.entry.edit\')}"
+						   class="img_link" href="{vh:Be.BackendEditLink(tableName:'tx_hfwuredirects_domain_model_redirects',identifier:redirect.uid)}">
+							<img width="20" height="20" class="addRedirect" src="{vh:Be.UriResource(path: 'Icons/actions-open.svg')}" />
+						</a>
+						<img width="20" height="20" data-uid="{redirect.uid}"
+							 class="deleteEntry" title="{f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.entry.delete\')}" src="{vh:Be.UriResource(path: 'Icons/actions-delete.svg')}" />
+					</f:if>
 				</td>
 			</tr>
 		</f:for>
 	</table>
+

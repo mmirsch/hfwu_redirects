@@ -1,4 +1,5 @@
 <?php
+
 namespace HFWU\HfwuRedirects\Domain\Model;
 
 /***************************************************************
@@ -26,66 +27,59 @@ namespace HFWU\HfwuRedirects\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-/**
- * RedirectCalls
- */
-class RedirectCalls extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
-{
 
-    /**
-     * count
-     *
-     * @var int
-     */
-    protected $count = 0;
-    
-    /**
-     * redirect
-     *
-     * @var int
-     */
-    protected $redirect = 0;
-    
-    /**
-     * Returns the count
-     *
-     * @return int $count
-     */
-    public function getCount()
-    {
-        return $this->count;
-    }
-    
-    /**
-     * Sets the count
-     *
-     * @param int $count
-     * @return void
-     */
-    public function setCount($count)
-    {
-        $this->count = $count;
-    }
-    
-    /**
-     * Returns the redirect
-     *
-     * @return int $redirect
-     */
-    public function getRedirect()
-    {
-        return $this->redirect;
-    }
-    
-    /**
-     * Sets the redirect
-     *
-     * @param int $redirect
-     * @return void
-     */
-    public function setRedirect($redirect)
-    {
-        $this->redirect = $redirect;
-    }
+class Pages extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
+
+	/**
+	 * uid
+	 * @var int
+	 * @validate NotEmpty
+	 */
+	protected $uid;
+	/**
+	 * pid
+	 * @var int
+	 * @validate NotEmpty
+	 */
+	protected $pid;
+
+	/**
+	 * title
+	 * @var string
+	 *
+	 */
+	protected $title;
+
+
+	/**
+	 * Returns the uid
+	 *
+	 * @return int $uid
+	 */
+	public function getUid()
+	{
+		return $this->uid;
+	}
+
+	/**
+	 * Returns the pid
+	 *
+	 * @return int $pid
+	 */
+	public function getPid()
+	{
+		return $this->pid;
+	}
+
+	/**
+	 * Returns the title
+	 *
+	 * @return string $title
+	 */
+	public function getTitle()
+	{
+		return $this->title;
+	}
+
 
 }

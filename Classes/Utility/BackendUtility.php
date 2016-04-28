@@ -28,6 +28,21 @@ class BackendUtility {
     }
 
     /**
+     * Get usergroups of current user
+     *
+     * @return array
+     */
+    public static function getBackendUserGroups() {
+        if (isset(self::getBackendUserAuthentication()->user)) {
+            $groups = self::getBackendUserAuthentication()->user['usergroup'];
+            if (!empty($groups)) {
+                return explode(',',$groups);
+            }
+        }
+        return array();
+    }
+
+    /**
      * Get property from backend user
      *
      * @param string $property
@@ -45,6 +60,13 @@ class BackendUtility {
      */
     protected static function getBackendUserAuthentication() {
         return $GLOBALS['BE_USER'];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getExtensionConfig() {
+        return unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['hfwu_redirects']);
     }
 
     /**
@@ -253,5 +275,7 @@ class BackendUtility {
         }
         return $subfolder;
     }
+
+
 
 }

@@ -76,27 +76,34 @@ class Redirects extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $isQrUrL = false;
 
     /**
-     * pageId
+     * page
      *
-     * @var integer
+     * @var \HFWU\HfwuRedirects\Domain\Model\Pages
      */
-    protected $pageId = 0;
+    protected $page = NULL;
 
     /**
-     * pageTitle
+     * usergroups
      *
      * @var string
      */
-    protected $pageTitle = '';
+    protected $usergroups ;
 
-    /**
-     * pageId
+   /**
+     * redirectCount
      *
      * @var integer
      */
     protected $redirectCount = 0;
 
-   /**
+    /**
+     * user has acces to edit/delete this entry
+     *
+     * @var bool
+     */
+    protected $access = true;
+
+  /**
      * Returns the title
      *
      * @return string $title
@@ -202,24 +209,24 @@ class Redirects extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     }
     
     /**
-     * Returns the pageId
+     * Returns the page
      *
-     * @return integer
+     * @return  \HFWU\HfwuRedirects\Domain\Model\Pages
      */
-    public function getPageId()
+    public function getPage()
     {
-        return $this->pageId;
+        return $this->page;
     }
     
     /**
-     * Sets the pageId
+     * Sets the page
      *
-     * @param integer $pageId
+     * @param  \HFWU\HfwuRedirects\Domain\Model\Pages $page
      * @return void
      */
-    public function setPageId($pageId)
+    public function setPage(Pages $page)
     {
-        $this->pageId = $pageId;
+        $this->page = $page;
     }
     
     /**
@@ -254,22 +261,6 @@ class Redirects extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     }
 
     /**
-     * @return string
-     */
-    public function getPageTitle()
-    {
-        return $this->pageTitle;
-    }
-
-    /**
-     * @param string $pageTitle
-     */
-    public function setPageTitle($pageTitle)
-    {
-        $this->pageTitle = $pageTitle;
-    }
-
-    /**
      * @return int
      */
     public function getRedirectCount()
@@ -284,6 +275,45 @@ class Redirects extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         $this->redirectCount = $redirectCount;
     }
+
+  /**
+   * @return void
+   */
+  public function storeRedirectCall() {
+    $this->redirectCount++;
+  }
+
+  /**
+   * @return string
+   */
+  public function getUsergroups()
+  {
+    return $this->usergroups;
+  }
+
+  /**
+   * @param string $usergroups
+   */
+  public function setUsergroups($usergroups)
+  {
+    $this->usergroups = $usergroups;
+  }
+
+  /**
+   * @return boolean
+   */
+  public function isAccess()
+  {
+    return $this->access;
+  }
+
+  /**
+   * @param boolean $access
+   */
+  public function setAccess($access)
+  {
+    $this->access = $access;
+  }
 
 
 }

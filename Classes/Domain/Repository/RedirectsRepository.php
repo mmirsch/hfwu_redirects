@@ -1,6 +1,8 @@
 <?php
 namespace HFWU\HfwuRedirects\Domain\Repository;
 
+use HFWU\HfwuRedirects\Utility\BackendUtility;
+use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
@@ -49,7 +51,19 @@ class RedirectsRepository extends Repository {
 			$querySettings->setRespectStoragePage(FALSE);
 		}
 		$this->setDefaultQuerySettings($querySettings);
+		$this->setDefaultOrderings($this->getDefaultOrderings());
 	}
+
+	/**
+	 * @return array
+	 */
+	public function getDefaultOrderings() {
+		$defaultOrderings = array(
+			'title' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_ASCENDING,
+		);
+			return $defaultOrderings;
+	}
+
 
 	/**
 	 * @return QueryResultInterface|array
@@ -59,7 +73,6 @@ class RedirectsRepository extends Repository {
 		/**@var $resultElem \HFWU\HfwuRedirects\Domain\Model\Redirects */
 		$resultElem = $this->findAll()->getFirst();
 		return $resultElem->getPid();
-
 	}
 
 	/**
@@ -67,102 +80,100 @@ class RedirectsRepository extends Repository {
 	 * @param int $pid
 	 * @return QueryResultInterface|array
 	 */
-	public function findRedirects($filter, $pid)
+	public function findRedirectsWithSearchWord($filter, $pid, $limit, $admin, $filterTypes)
 	{
-		$this->initializeObject($pid);
+		$this->initializeObject();
+		/** @var \TYPO3\CMS\Extbase\Persistence\QueryInterface $query */
 		$query = $this->createQuery();
-		$queryDefinition = $query->logicalOr(
+		$queryDefinition = $query->logicalOr (
 			$query->like('shortUrl', '%' . $filter . '%'),
 			$query->logicalOr(
 				$query->like('title', '%' . $filter . '%'),
-				$query->like('urlComplete', '%' . $filter . '%')
+				$query->logicalOr(
+					$query->like('urlComplete', '%' . $filter . '%'),
+					$query->like('page.title', '%' . $filter . '%')
+				)
 			)
 		);
+		if (!$admin) {
+			$queryDefinition = $query->logicalAnd (
+				$query->equals('pid', $pid),
+				$queryDefinition
+			);
+		}
+		if ($filterTypes==='redirects_only') {
+			$queryDefinition = $query->logicalAnd (
+				$query->equals('is_qr_url', 0),
+				$queryDefinition
+			);
+		} else if ($filterTypes==='qr_codes_only') {
+			$queryDefinition = $query->logicalAnd (
+				$query->equals('is_qr_url', 1),
+				$queryDefinition
+			);
+		}
+		$limit = intval($limit);
+		if (MathUtility::canBeInterpretedAsInteger($limit) && $limit>0) {
+			$query->setLimit($limit);
+		}
 		$queryResult = $query->matching(
 			$queryDefinition
 		)->execute();
-		if ($queryResult->count() > 0) {
-			return $this->additionalInfos($queryResult);
-		} else {
-			return NULL;
-		}
-	}
-		/**
-		 * Find all redirects containing searchword
-		 * @param $filter string
-		 * @param int $pid
-		 * @return QueryResultInterface|array
-		 */
-		public function findRedirectsWithSearchWord($filter, $pid, $limit=50) {
-			$query = $this->createQuery();
-			$sql = 'SELECT tx_hfwuredirects_domain_model_redirects.*';
-			$sql .= ' FROM tx_hfwuredirects_domain_model_redirects';
-			$sql .= ' LEFT JOIN pages ON tx_hfwuredirects_domain_model_redirects.page_id=pages.uid';
-			$sql .= ' WHERE ( tx_hfwuredirects_domain_model_redirects.title LIKE "%' . $filter . '%" OR ' .
-												'tx_hfwuredirects_domain_model_redirects.short_url LIKE "%' . $filter . '%" OR ' .
-												'tx_hfwuredirects_domain_model_redirects.url_complete LIKE "%' . $filter . '%" OR ' .
-												'pages.title LIKE "%' . $filter . '%")';
-
-			$sql .= ' AND tx_hfwuredirects_domain_model_redirects.hidden = 0';
-			$sql .= ' AND tx_hfwuredirects_domain_model_redirects.deleted = 0';
-			$sql .= ' AND tx_hfwuredirects_domain_model_redirects.pid = ' . $pid;
-			$sql .= ' AND pages.hidden = 0';
-			$sql .= ' AND pages.deleted = 0';
-			$sql .= ' ORDER BY tx_hfwuredirects_domain_model_redirects.title';
-			$sql .= ' LIMIT 0,' . $limit;
-			$queryResult = $query->statement($sql)->execute();
-			if ($queryResult->count() > 0) {
-				return $this->additionalInfos($queryResult);
+		if ($queryResult->count() > 0 && !$admin) {
+			/**@var array $extensionConfiguration */
+			$extensionConfiguration = BackendUtility::getExtensionConfig();
+			if (isset($extensionConfiguration['access_restriction_mode'])) {
+				$accessRestrictionMode = $extensionConfiguration['access_restriction_mode'];
 			} else {
-				return NULL;
+				$accessRestrictionMode = 'all';
+			}
+			switch ($accessRestrictionMode) {
+				case 'user':
+					$this->checkUserAccess($queryResult);
+					break;
+				case 'group':
+					$this->checkGroupAccess($queryResult);
+					break;
+				default:
+			// no access restrictions
+			}
+		}
+		return $queryResult;
+	}
+
+	/**
+	 * Check if current backend user is member in one of the groups set for each entry
+	 *
+	 * @param $queryResult QueryResultInterface
+	 * @return void
+	 */
+	public function checkGroupAccess(&$queryResult) {
+			$currentUserGroups = BackendUtility::getBackendUserGroups();
+			/**@var $resultElem \HFWU\HfwuRedirects\Domain\Model\Redirects */
+			foreach($queryResult as $resultElem) {
+				$entryGroups = explode(',',$resultElem->getUsergroups());
+				$result = array_intersect($currentUserGroups,$entryGroups);
+				$access = !empty($result);
+				$resultElem->setAccess($access);
 			}
 	}
 
 	/**
+	 * Check if current backend user is creator of entries
+	 *
 	 * @param $queryResult QueryResultInterface
-	 * @return array
+	 * @return void
 	 */
-	public function additionalInfos($queryResult) {
-		/**@var $redirectCallsRepository \HFWU\HfwuRedirects\Domain\Repository\RedirectCallsRepository */
-		$redirectCallsRepository = $this->objectManager->get('HFWU\HfwuRedirects\Domain\Repository\RedirectCallsRepository');
-
-		$resultlist = array();
+	public function checkUserAccess(&$queryResult) {
+		$currentUserId = BackendUtility::getPropertyFromBackendUser('uid');
 		/**@var $resultElem \HFWU\HfwuRedirects\Domain\Model\Redirects */
 		foreach($queryResult as $resultElem) {
-			$urlComplete = $resultElem->getUrlComplete();
-			if (empty($urlComplete)) {
-				$pageId = $resultElem->getPageId();
-				$pageTitle = $this->getPageTitle($pageId);
-			} else {
-				$pageTitle = $urlComplete;
-			}
-			$resultElem->setPageTitle($pageTitle);
-			/**@var $redirectCalls \HFWU\HfwuRedirects\Domain\Model\RedirectCalls */
-			$redirectCalls = $redirectCallsRepository->findOneByRedirect($resultElem->getUid());
-			if (empty($redirectCalls)) {
-				$redirectCount = 0;
-			} else {
-				$redirectCount = $redirectCalls->getCount();
-			}
-			$resultElem->setRedirectCount($redirectCount);
-			$resultlist[] = $resultElem;
+			$access = ($currentUserId === $resultElem->_getProperty('cruser_id'));
+			$resultElem->setAccess($access);
 		}
-		return $resultlist;
 	}
 
-
-	/**
-	 * @param $pageId int
-	 * @return String
-	 */
-	public function getPageTitle($pageId) {
-		/**@var \TYPO3\CMS\Frontend\Page\PageRepository $pageSelect */
-		$pageSelect = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Page\PageRepository');
-		$page = $pageSelect->getPage($pageId);
-		return $page['title'];
-	}
-
-	/**
+		/**
 	 * @param $uid int
 	 * @return String
 	 */

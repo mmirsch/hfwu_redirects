@@ -24,17 +24,8 @@
 			<trans-unit id="tx_hfwuredirects_domain_model_redirects.is_qr_url">
 				<source>Eintrag ist Qr-Code</source>
 			</trans-unit>
-			<trans-unit id="tx_hfwuredirects_domain_model_redirects.page_id">
+			<trans-unit id="tx_hfwuredirects_domain_model_redirects.page">
 				<source>TYPO3 Seiten-Id</source>
-			</trans-unit>
-			<trans-unit id="tx_hfwuredirects_domain_model_redirectcalls">
-				<source>Redirect Aufrufe</source>
-			</trans-unit>
-			<trans-unit id="tx_hfwuredirects_domain_model_redirectcalls.count">
-				<source>Anzahl</source>
-			</trans-unit>
-			<trans-unit id="tx_hfwuredirects_domain_model_redirectcalls.redirect">
-				<source>Redirect</source>
 			</trans-unit>
 		</body>
 	</file>

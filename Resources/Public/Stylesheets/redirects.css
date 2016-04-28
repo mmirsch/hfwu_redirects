@@ -23,6 +23,11 @@
     margin-top: 20px;
 }
 
+#redirect_list a.img_link {
+    overflow: hidden;
+    text-decoration: none;
+}
+
 table.tx_hfwuredirects {
     border-collapse: collapse;
 }
@@ -39,9 +44,8 @@ table.tx_hfwuredirects td {
 }
 
 table.tx_hfwuredirects td.title {
-    background: #00305d;
-    border-bottom: 1px solid #fff;
-    padding: 0;
+    font-weight: 900;
+    padding: 2px 6px;
     margin: 0;
 }
 

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="de" datatype="plaintext" original="messages" date="2016-04-11T17:05:19Z" product-name="hfwu_redirects">
+		<header/>
+		<body>
+			<trans-unit id="general.display.all">
+				<source>Alle anzeigen</source>
+			</trans-unit>
+			<trans-unit id="general.display.redirects_only">
+				<source>Nur Redirects anzeigen</source>
+			</trans-unit>
+			<trans-unit id="general.display.qr_codes_only">
+				<source>Nur QR-Codes anzeigen</source>
+			</trans-unit>
+			<trans-unit id="general.display.filter_view">
+				<source>Anzeige filtern</source>
+			</trans-unit>
+			<trans-unit id="general.entry.create">
+				<source>Neuen Eintrag anlegen</source>
+			</trans-unit>
+			<trans-unit id="general.entry.edit">
+				<source>Eintrag bearbeiten</source>
+			</trans-unit>
+			<trans-unit id="general.entry.delete">
+				<source>Eintrag löschen</source>
+			</trans-unit>
+			<trans-unit id="general.create_qr_code">
+				<source>QR-Code erzeugen</source>
+			</trans-unit>
+			<trans-unit id="general.test_redirect">
+				<source>Redirect testen</source>
+			</trans-unit>
+
+			<trans-unit id="general.messages.delete_confirmation_message">
+				<source>"Wollen Sie diesen Eintrag wirklich löschen?</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

@@ -14,6 +14,7 @@ use HFWU\HfwuRedirects\Utility\Qr\Exceptions\VersionTooLargeException;
 use HFWU\HfwuRedirects\Utility\Qr\Exceptions\ImageSizeTooLargeException;
 use HFWU\HfwuRedirects\Utility\Qr\Exceptions\ImageFunctionUnknownException;
 use ReflectionFunction;
+use TYPO3\CMS\Core\Utility\MathUtility;
 
 
 /**
@@ -1260,5 +1261,23 @@ class QrCode {
         }
 
         $this->image = $output_image;
+    }
+
+    /*
+     * return array('r'=>red, 'g'=>green, 'b'=>blue, 'a'=0)
+     */
+    public static function convertHexToRgbColor($hexColor) {
+        if (strlen($hexColor)!=6) {
+            throw new InvalidRgbColorException('QRCode : invalid rgb-color:' . $hexColor);
+        }
+        $red = substr($hexColor,0,2);
+        $green = substr($hexColor,2,2);
+        $blue = substr($hexColor,4,2);
+        return array(
+          'r'=>hexdec($red),
+          'g'=>hexdec($green),
+          'b'=>hexdec($blue),
+          'a'=>0,
+        );
     }
 }

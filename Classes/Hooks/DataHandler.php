@@ -4,6 +4,7 @@ namespace  HFWU\HfwuRedirects\Hooks;
 
 use HFWU\HfwuRedirects\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\StringUtility;
 
 class DataHandler {
 
@@ -52,7 +53,8 @@ class DataHandler {
 			}
 			if ($fields['url_complete']) {
 				$urlComplete = $fields['url_complete'];
-				if (strpos('http',$urlComplete) === false) {
+
+				if (!StringUtility::beginsWith($urlComplete, 'http')) {
 					$urlComplete = 'http://' .$urlComplete;
 					$redirect->setUrlComplete($urlComplete);
 				}
@@ -83,9 +85,9 @@ class DataHandler {
 		if ($table === 'tx_hfwuredirects_domain_model_redirects') {
 			$error = false;
 			// check pageId or urlComplete is filled
-			if ($status === 'new' && empty($fieldArray['page_id']) && empty($fieldArray['url_complete'])) {
+			if ($status === 'new' && empty($fieldArray['page']) && empty($fieldArray['url_complete'])) {
 				$dataHandler->log($table, $id, 1, 0, 1,
-					'Daten unvollständig: es muss entweder das Feld "pageId" oder das Feld "urlComplete" ausgefüllt weden.',
+					'Daten unvollständig: es muss entweder das Feld "TYPO3 Seiten-ID" oder das Feld "komplette URL" ausgefüllt weden.',
 					0, [$table]);
 				$error = true;
 

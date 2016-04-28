@@ -5,20 +5,34 @@
 	<h1>Redirects verwalten</h1>
 	<f:flashMessages class="message" />
 	<f:if condition="{0:pid,1:redirects} != {0:'',1:''}">
-		<label for="suchfilter" class="filter_label" title="Anzeige filtern">
+		<f:form.hidden id="deleteConfirmationMessage" value="{f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.messages.delete_confirmation_message\')}" />
+		<f:form.hidden id="pid" value="{pid}" />
+		<f:form.hidden id="limit" value="{limit}" />
+		<f:form.hidden id="site_url" value="{site_url}" />
+		<label for="search_filter" class="filter_label" title="{f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.filter_view\')}">
 			Anzeige filtern
 		</label>
-
-		<f:form.hidden id="deleteConfirmationMessage" value="Wollen Sie diesen Eintrag wirklich löschen?" />
-		<f:form.hidden id="pid" value="{pid}" />
 		<f:form.textfield
 				type="input"
 				value="<vh:RawAndRemoveXss>{filter}</vh:RawAndRemoveXss>"
 				class="ajaxFilter"
-				id="suchfilter" />
-		<f:form.button class="ajaxFilterReset" >Alle anzeigen</f:form.button>
-		<a title="Neuen Eintrag erstellen" href="{vh:Be.BackendCreateLink(tableName:'tx_hfwuredirects_domain_model_redirects',identifier:pid)}">
-			<f:form.button class="button" >Neuen Eintrag erstellen</f:form.button>
+				id="search_filter" />
+		<f:if condition="{admin}">
+			<f:then>
+				<f:form.select id="filter_types" property="filter_types" options="{
+					all:'{f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.all\')}',
+					redirects_only:'{f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.redirects_only\')}',
+					qr_codes_only:'{f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.qr_codes_only\')}'
+				}"  />
+			</f:then>
+			<f:else>
+				<f:form.hidden id="filter_types" value="qr_codes_only" />
+			</f:else>
+		</f:if>
+		<br />
+		<f:form.button class="ajaxFilterReset"><f:translate key="LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.all"></f:translate></f:form.button>
+		<a href="{vh:Be.BackendCreateLink(tableName:'tx_hfwuredirects_domain_model_redirects',identifier:pid)}">
+			<f:form.button class="button"><f:translate key="LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.entry.create"></f:translate></f:form.button>
 		</a>
 		<div id="redirect_list" xmlns:f="http://www.w3.org/1999/html">
 			<f:render partial="Redirects/AliasList" arguments="{_all}" />

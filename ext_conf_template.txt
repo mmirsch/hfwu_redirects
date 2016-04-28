@@ -1,14 +1,21 @@
 
 # Options
 ###########################
-# cat=options/enable/10; type=int; label=Maximale Anzahl an Einträgen
+# cat=options/list/2; type=int; label=Maximale Anzahl an Einträgen
 limit = 50
 
-# cat=options/enable/20; type=int; label=Maximale Anzahl an Einträgen
+# cat=options/qr-codes/1; type=int; label=Größe des QR-Codes in Pixel
 qr_imgsize = 400
 
-# cat=options/enable/30; type=int; label=Maximale Anzahl an Einträgen
+# cat=options/qr-codes/2; type=int; label=Randabstand in Pixeln
 qr_padding = 40
 
-# cat=options/enable/40; type=string; label=Maximale Anzahl an Einträgen
-qr_bgcolor = array('r' => 0, 'g' => 48, 'b' => 94, 'a' => 0)
+# cat=options/qr-codes/3; type=string; label=Farbton (Hexadezimal)
+qr_fgcolor = 00308e
+
+# cat=options/admin/6; type=string; label=Systemordner für die zentralen Redirects
+sysfolder_redirects =
+
+# cat=Options/admin/10; type=options[alle Einträge=all, nur Einträge einer eigenen Gruppe=group, Nur eigene Einträge=user]; label=Berechtigung für Redakteure: Welche Einträge sollen Redakteure bearbeiten dürfen
+access_restriction_mode = all
+

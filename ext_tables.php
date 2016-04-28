@@ -14,7 +14,7 @@ if (TYPO3_MODE === 'BE') {
 		'redirects',	// Submodule key
 		'',						// Position
 		array(
-			'Redirects' => 'aliasList, aliasListAjax, deleteRedirectEntryAjax, showQrCode',
+			'Redirects' => 'aliasList',
 		),
 		array(
 			'access' => 'user,group',
@@ -28,9 +28,6 @@ if (TYPO3_MODE === 'BE') {
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr('tx_hfwuredirects_domain_model_redirects', 'EXT:hfwu_redirects/Resources/Private/Language/locallang_csh_tx_hfwuredirects_domain_model_redirects.xlf');
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_hfwuredirects_domain_model_redirects');
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr('tx_hfwuredirects_domain_model_redirectcalls', 'EXT:hfwu_redirects/Resources/Private/Language/locallang_csh_tx_hfwuredirects_domain_model_redirectcalls.xlf');
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_hfwuredirects_domain_model_redirectcalls');
-
 $GLOBALS['TYPO3_CONF_VARS']['BE']['AJAX']['HfwuRedirects::aliasList'] = array(
 	'callbackMethod' => 'HFWU\HfwuRedirects\Utility\AjaxDispatcher->dispatchAliasList',
 	'csrfTokenCheck' => true
@@ -41,4 +38,9 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['AJAX']['HfwuRedirects::deleteRedirectEntry'] 
 	'csrfTokenCheck' => true
 );
 
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['hfwu_redirects'] = 'HFWU\HfwuRedirects\Hooks\DataHandler';
+$GLOBALS['TYPO3_CONF_VARS']['BE']['AJAX']['HfwuRedirects::showQrCodeAjax'] = array(
+	'callbackMethod' => 'HFWU\HfwuRedirects\Utility\AjaxDispatcher->dispatchShowQrCode',
+	'csrfTokenCheck' => true
+);
+
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['hfwu_redirects'] = 'HFWU\\HfwuRedirects\\Hooks\\DataHandler';

@@ -21,7 +21,7 @@
 			<trans-unit id="is_qr_url.description">
 				<source>Eintrag ist Qr-Code</source>
 			</trans-unit>
-			<trans-unit id="page_id.description">
+			<trans-unit id="page.description">
 				<source>TYPO3 Seiten-Id</source>
 			</trans-unit>
 		</body>

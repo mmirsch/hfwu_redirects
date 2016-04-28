@@ -1,13 +1,11 @@
 <?php
+namespace HFWU\HfwuRedirects\Hooks;
 
+class RedirectHandling {
 
-class PageNotFoundHandling {
-
-	protected static $errorpage='404';
-	protected static $testStringArg='redirect_test';
 	protected $objectManager;
 
-	function initTSFE($id = 1) {
+	function initTSFE() {
 		$GLOBALS['TSFE']->determineId();
 		$GLOBALS['TSFE']->initTemplate();
 		$GLOBALS['TSFE']->getConfigArray();
@@ -20,26 +18,22 @@ class PageNotFoundHandling {
 		}
 	}
 
-	function pageNotFound($params,$tsfeObj) {
-		$url = 'http://' . $_SERVER['HTTP_HOST'] . '/' . self::$errorpage;
-
+	/**
+	 * Checks if Redirect is necessary
+	 *
+	 * @param array $params
+	 * @param \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $tsFeController
+	 * @return void
+	 */
+	function handleRedirects(&$params, &$tsFeController) {
 		/**@var $objectManager \TYPO3\CMS\Extbase\Object\ObjectManager */
 		$this->objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
 		/**@var $redirectsRepository \HFWU\HfwuRedirects\Domain\Repository\RedirectsRepository */
 		$redirectsRepository = $this->objectManager->get('HFWU\HfwuRedirects\Domain\Repository\RedirectsRepository');
-		$currentUrl = $params['currentUrl'];
-		/*
-		 * Check if page is called by backend for testing
-		 */
-		$testMode = intval(\TYPO3\CMS\Core\Utility\GeneralUtility::_GET(self::$testStringArg));
-		/*
-		 * Remove test-arg from url if in testmode
-		 */
-		if ($testMode) {
-			$currentUrl = preg_replace('{\?' . self::$testStringArg . '=1}','',$currentUrl);
-		}
-		$currentUrl = preg_replace('{^/|/$}','',$currentUrl);
 		$this->initTSFE();
+		$currentUrl = $_SERVER['REQUEST_URI'];
+		$currentUrl = preg_replace('{^/|/$}','',$currentUrl);
+
 		/**@var $redirectResult \TYPO3\CMS\Extbase\Persistence\QueryResultInterface */
 		$redirectResult = $redirectsRepository->findByShortUrl($currentUrl);
 		if ($redirectResult->count()>0) {
@@ -49,18 +43,17 @@ class PageNotFoundHandling {
 				$url = $redirect->getUrlComplete();
 				if (empty($url)) {
 
-					$pageId = $redirect->getPage()->getUid();
+					$pageId = $redirect->getPageId();
 					$conf = array(
 						'parameter' => $pageId,
-						'forceAbsoluteUrl' => 1,
 					);
+					$searchWord = $redirect->getSearchWord();
+					$urlHash = $redirect->getUrlHash();
+					$additionalParams = '';
 					/** @var \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj */
 					$cObj = $this->objectManager->get('TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer');
 					$url = $cObj->typolink_URL($conf);
-					/*
-					 * handle optional search string for opening accordion elements
-					 */
-					$searchWord = $redirect->getSearchWord();
+
 					if (!empty($searchWord)) {
 						$searchword = str_replace(' ','+',strtolower($searchWord));
 						if (strpos('?',$url) === false) {
@@ -69,27 +62,18 @@ class PageNotFoundHandling {
 							$url .= '&q=' . $searchword;
 						}
 					}
-					/*
-					 * handle optional hash for opening accordion elements or do other things
-					 */
-					$urlHash = $redirect->getUrlHash();
 					if (!empty($urlHash)) {
 						$url .= '#' .  $urlHash;
 					}
 				}
-				/*
-				 * Store redirect call for statistics if not in test mode
-				 */
-				if (!$testMode) {
-					$redirect->storeRedirectCall();
-					$redirectsRepository->update($redirect);
-					$this->objectManager->get('TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface')->persistAll();
+				$cleanUrl = preg_replace('{^/|/$}','',$url);
+				if ($currentUrl != $cleanUrl) {
+					/**@var $redirectCallsRepository \HFWU\HfwuRedirects\Domain\Repository\RedirectCallsRepository */
+					$redirectCallsRepository = $this->objectManager->get('HFWU\HfwuRedirects\Domain\Repository\RedirectCallsRepository');
+					$redirectCallsRepository->storeRedirectCall($redirect);
+					\TYPO3\CMS\Core\Utility\HttpUtility::redirect($url,\TYPO3\CMS\Core\Utility\HttpUtility::HTTP_STATUS_301);
 				}
 			}
 		}
-/*
- * do the redirect
- */
-		\TYPO3\CMS\Core\Utility\HttpUtility::redirect($url,\TYPO3\CMS\Core\Utility\HttpUtility::HTTP_STATUS_301);
 	}
 }

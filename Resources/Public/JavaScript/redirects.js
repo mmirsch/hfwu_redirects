@@ -62,70 +62,83 @@ function processingAnimation(mode,message) {
     }
 }
 
-function aliasListAjax(filter, pid, listId) {
+function aliasListAjax() {
     var ajaxUrl = TYPO3.settings.ajaxUrls['HfwuRedirects::aliasList'];
+    var filter = TYPO3.jQuery('#search_filter').val();
+    var pid = TYPO3.jQuery('#pid').val();
+    var limit = TYPO3.jQuery('#limit').val();
+    var site_url = TYPO3.jQuery('#site_url').val();
+    var filter_types = TYPO3.jQuery('#filter_types').val();
     TYPO3.jQuery.ajax({
         url: ajaxUrl,
         type: 'GET',
         dataType: 'html',
         data: {
             filter: filter,
-            pid: pid
+            pid: pid,
+            limit: limit,
+            site_url: site_url,
+            filter_types: filter_types
+
         },
         beforeSend : function(){
             processingAnimation('start','bitte warten');
         },
         success: function (result) {
-            TYPO3.jQuery(listId).html(result);
+            TYPO3.jQuery('#redirect_list').html(result);
         },
         error: function (error) {
-            TYPO3.jQuery(listId).html(error);
+            TYPO3.jQuery('#redirect_list').html(error);
         }
     }).always(function() {
         processingAnimation('stop');
     });
 }
 
-function aliasDeleteAjax(id, filter, pid, listId) {
+function aliasDeleteAjax(uid) {
     var ajaxUrl = TYPO3.settings.ajaxUrls['HfwuRedirects::deleteRedirectEntry'];
     TYPO3.jQuery.ajax({
         url:       ajaxUrl,
         type:      'GET',
         dataType:  'html',
         data: {
-            id: id
+            uid: uid
         },
         success: function (result) {
-            aliasListAjax(filter, pid, listId);
+            aliasListAjax();
         },
         error: function (error) {
-            aliasListAjax(filter, pid, listId);
+            aliasListAjax();
         }
     });
 }
 
+function showQrCodeAjax(uid) {
+    var ajaxUrl = TYPO3.settings.ajaxUrls['HfwuRedirects::showQrCodeAjax'] + '&uid=' + uid;
+    document.location.href = ajaxUrl;
+}
+
 TYPO3.jQuery(document).ready(function() {
-    TYPO3.jQuery('.ajaxFilter').bindWithDelay('keyup', function (event) {
-        var filter = TYPO3.jQuery(this).val();
-        if (filter.length>=1) {
-            var pid = TYPO3.jQuery('#pid').val();
-            aliasListAjax(filter,pid,'#redirect_list');
-        }
+    TYPO3.jQuery('#search_filter').bindWithDelay('keyup', function (event) {
+         aliasListAjax();
     },300);
     TYPO3.jQuery('.ajaxFilterReset').on('click', function (event) {
         TYPO3.jQuery('.ajaxFilter').val('');
-        var pid = TYPO3.jQuery('#pid').val();
-        aliasListAjax('',pid,'#redirect_list');
+        aliasListAjax();
     });
     TYPO3.jQuery('#redirect_list').on('click', '.deleteEntry', function (event) {
         var confirmationMessage = TYPO3.jQuery('#deleteConfirmationMessage').val();
         if (confirm(confirmationMessage)) {
-            var id = TYPO3.jQuery(this).attr('data-uid');
-            var filter = TYPO3.jQuery('.ajaxFilter').val();
-            var pid = TYPO3.jQuery('#pid').val();
-            aliasDeleteAjax(id,filter, pid, '#redirect_list');
+            aliasDeleteAjax(uid);
         }
     });
-
+    TYPO3.jQuery('#redirect_list').on('click', '.showQrCode', function (event) {
+        var uid = TYPO3.jQuery(this).attr('data-uid');
+        showQrCodeAjax(uid);
+        return false;
+    });
+    TYPO3.jQuery('#filter_types').on('change', function (event) {
+        aliasListAjax();
+    });
 
 });
