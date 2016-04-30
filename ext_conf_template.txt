@@ -1,7 +1,7 @@
 
 # Options
 ###########################
-# cat=options/list/2; type=int; label=Maximale Anzahl an Einträgen
+# cat=options/list/2; type=int; label=Maximale Anzahl an Einträgen in der Backendansicht
 limit = 50
 
 # cat=options/qr-codes/1; type=int; label=Größe des QR-Codes in Pixel

@@ -6,14 +6,26 @@
 			<trans-unit id="general.display.all">
 				<source>Alle anzeigen</source>
 			</trans-unit>
+			<trans-unit id="general.display.show_all_entries">
+				<source>Alle Einträge anzeigen</source>
+			</trans-unit>
+			<trans-unit id="general.display.show_entries">
+				<source>Einträge anzeigen</source>
+			</trans-unit>
 			<trans-unit id="general.display.redirects_only">
 				<source>Nur Redirects anzeigen</source>
 			</trans-unit>
 			<trans-unit id="general.display.qr_codes_only">
 				<source>Nur QR-Codes anzeigen</source>
 			</trans-unit>
-			<trans-unit id="general.display.filter_view">
-				<source>Anzeige filtern</source>
+			<trans-unit id="general.display.filter_search">
+				<source>Einträge suchen</source>
+			</trans-unit>
+			<trans-unit id="general.display.filter_types">
+				<source>Element-Typ</source>
+			</trans-unit>
+			<trans-unit id="general.display.filter_limit">
+				<source>Anzahl</source>
 			</trans-unit>
 			<trans-unit id="general.entry.create">
 				<source>Neuen Eintrag anlegen</source>
@@ -30,9 +42,23 @@
 			<trans-unit id="general.test_redirect">
 				<source>Redirect testen</source>
 			</trans-unit>
-
 			<trans-unit id="general.messages.delete_confirmation_message">
 				<source>"Wollen Sie diesen Eintrag wirklich löschen?</source>
+			</trans-unit>
+			<trans-unit id="redirects.columns.title">
+				<source>Bezeichnung</source>
+			</trans-unit>
+			<trans-unit id="redirects.columns.short_url">
+				<source>Short-URL</source>
+			</trans-unit>
+			<trans-unit id="redirects.columns.target_url">
+				<source>TYPO3-Seite / Ziel-URL</source>
+			</trans-unit>
+			<trans-unit id="redirects.columns.redirect_calls">
+				<source>Anzahl Aufrufe</source>
+			</trans-unit>
+			<trans-unit id="redirects.columns.actions">
+				<source>Aktionen</source>
 			</trans-unit>
 		</body>
 	</file>

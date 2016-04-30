@@ -49,6 +49,7 @@ table.tx_hfwuredirects td.title {
     margin: 0;
 }
 
+
 table.tx_hfwuredirects tr:last-child td.title {
     border-bottom: 1px solid #00305d;
 }

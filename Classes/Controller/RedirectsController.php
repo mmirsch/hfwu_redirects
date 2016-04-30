@@ -118,7 +118,7 @@ class RedirectsController extends ActionController {
             /** @var QueryResultInterface $redirects */
             $redirects = $this->redirectsRepository->findRedirectsWithSearchWord($filter, $pid, $limit, $admin, $filterTypes);
             if ($redirects->count() > 0) {
-                $siteUrl = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
+                $siteUrl = 'http://' . GeneralUtility::getIndpEnv('HTTP_HOST');
                 GeneralViewUtility::assignViewArguments($this->view, $siteUrl, $filter, $pid, $limit, $admin, $filterTypes, $redirects);
             } else {
                 $this->addFlashMessage(

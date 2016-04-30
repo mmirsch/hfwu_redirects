@@ -5,12 +5,11 @@
 	<h1>Redirects verwalten</h1>
 	<f:flashMessages class="message" />
 	<f:if condition="{0:pid,1:redirects} != {0:'',1:''}">
-		<f:form.hidden id="deleteConfirmationMessage" value="{f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.messages.delete_confirmation_message\')}" />
+		<f:form.hidden id="deleteConfirmationMessage" value="{f:translate(key: 'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.messages.delete_confirmation_message')}" />
 		<f:form.hidden id="pid" value="{pid}" />
-		<f:form.hidden id="limit" value="{limit}" />
 		<f:form.hidden id="site_url" value="{site_url}" />
-		<label for="search_filter" class="filter_label" title="{f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.filter_view\')}">
-			Anzeige filtern
+		<label for="search_filter" class="filter_label">
+			<f:translate key="LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.filter_search"></f:translate>
 		</label>
 		<f:form.textfield
 				type="input"
@@ -19,14 +18,28 @@
 				id="search_filter" />
 		<f:if condition="{admin}">
 			<f:then>
-				<f:form.select id="filter_types" property="filter_types" options="{
+				<label for="filter_types" class="filter_label">
+					<f:translate key="LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.filter_types"></f:translate>
+				</label>
+				<f:form.select id="filter_types" value="{filter_types}" options="{
 					all:'{f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.all\')}',
 					redirects_only:'{f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.redirects_only\')}',
 					qr_codes_only:'{f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.qr_codes_only\')}'
 				}"  />
+				<label for="limit" class="filter_label">
+					<f:translate key="LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.filter_limit"></f:translate>
+				</label>
+				<f:form.select id="limit" value="{limit}" options="{
+					99999:'{f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.show_all_entries\')}',
+					10:'10 {f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.show_entries\')}',
+					20:'20 {f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.show_entries\')}',
+					50:'50 {f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.show_entries\')}',
+					100:'100 {f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.show_entries\')}'
+				}"  />
 			</f:then>
 			<f:else>
 				<f:form.hidden id="filter_types" value="qr_codes_only" />
+				<f:form.hidden id="limit" value="{limit}" />
 			</f:else>
 		</f:if>
 		<br />

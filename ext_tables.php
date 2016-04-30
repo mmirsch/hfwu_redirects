@@ -26,7 +26,7 @@ if (TYPO3_MODE === 'BE') {
 }
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr('tx_hfwuredirects_domain_model_redirects', 'EXT:hfwu_redirects/Resources/Private/Language/locallang_csh_tx_hfwuredirects_domain_model_redirects.xlf');
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_hfwuredirects_domain_model_redirects');
+//\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_hfwuredirects_domain_model_redirects');
 
 $GLOBALS['TYPO3_CONF_VARS']['BE']['AJAX']['HfwuRedirects::aliasList'] = array(
 	'callbackMethod' => 'HFWU\HfwuRedirects\Utility\AjaxDispatcher->dispatchAliasList',

@@ -189,7 +189,7 @@ class BackendUtility {
     /**
      * Read pid from returnUrl
      *        URL example:
-     *        http://powermail.localhost.de/typo3/alt_doc.php?&
+     *        http://www.hfwu.de/typo3/alt_doc.php?&
      *        returnUrl=%2Ftypo3%2Fsysext%2Fcms%2Flayout%2Fdb_layout.php%3Fid%3D17%23
      *        element-tt_content-14&edit[tt_content][14]=edit
      *

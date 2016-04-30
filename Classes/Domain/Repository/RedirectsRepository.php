@@ -50,6 +50,7 @@ class RedirectsRepository extends Repository {
 			// don't add the pid constraint
 			$querySettings->setRespectStoragePage(FALSE);
 		}
+		$querySettings->setRespectSysLanguage(FALSE);
 		$this->setDefaultQuerySettings($querySettings);
 		$this->setDefaultOrderings($this->getDefaultOrderings());
 	}

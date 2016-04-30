@@ -124,11 +124,13 @@ TYPO3.jQuery(document).ready(function() {
     },300);
     TYPO3.jQuery('.ajaxFilterReset').on('click', function (event) {
         TYPO3.jQuery('.ajaxFilter').val('');
+        TYPO3.jQuery('#filter_types').val('all');
         aliasListAjax();
     });
     TYPO3.jQuery('#redirect_list').on('click', '.deleteEntry', function (event) {
         var confirmationMessage = TYPO3.jQuery('#deleteConfirmationMessage').val();
         if (confirm(confirmationMessage)) {
+            var uid = TYPO3.jQuery(this).attr('data-uid');
             aliasDeleteAjax(uid);
         }
     });
@@ -138,6 +140,9 @@ TYPO3.jQuery(document).ready(function() {
         return false;
     });
     TYPO3.jQuery('#filter_types').on('change', function (event) {
+        aliasListAjax();
+    });
+    TYPO3.jQuery('#limit').on('change', function (event) {
         aliasListAjax();
     });
 

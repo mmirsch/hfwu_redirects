@@ -1,6 +1,6 @@
 <?php
-return array(
-	'ctrl' => array(
+return [
+	'ctrl' => [
 		'title'	=> 'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_db.xlf:tx_hfwuredirects_domain_model_redirects',
 		'label' => 'title',
 		'label_alt' => 'short_url',
@@ -16,168 +16,184 @@ return array(
 		'transOrigPointerField' => 'l10n_parent',
 		'transOrigDiffSourceField' => 'l10n_diffsource',
 		'delete' => 'deleted',
-		'enablecolumns' => array(
+		'enablecolumns' => [
 			'disabled' => 'hidden',
 			'starttime' => 'starttime',
 			'endtime' => 'endtime',
-		),
+		],
 		'searchFields' => 'short_url,url_complete,url_hash,search_word,',
 		'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('hfwu_redirects') . 'Resources/Public/Icons/tx_hfwuredirects_domain_model_redirects.gif'
-	),
-	'interface' => array(
-		'showRecordFieldList' => 'hidden, title, is_qr_url, short_url, page, url_complete, search_word, url_hash, cruser_id, usergroups, redirect_count',
-	),
-	'types' => array(
-		'1' => array('showitem' => 'hidden;;1, title, is_qr_url, short_url, page, url_complete, search_word, url_hash, cruser_id, usergroups, --div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access, starttime, endtime'),
-	),
-	'palettes' => array(
-		'1' => array('showitem' => ''),
-	),
-	'columns' => array(
+	],
+	'interface' => [
+		'showRecordFieldList' => 'hidden, sys_language_uid, title, is_qr_url, short_url, page, url_complete, search_word, url_hash, cruser_id, usergroups, redirect_count',
+	],
+	'types' => [
+		'1' => ['showitem' => 'hidden;;1, sys_language_uid, title, is_qr_url, short_url, page, url_complete, search_word, url_hash, cruser_id, usergroups, --div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access, starttime, endtime'],
+	],
+	'palettes' => [
+		'1' => ['showitem' => ''],
+	],
+	'columns' => [
 
-		'hidden' => array(
+		'hidden' => [
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.hidden',
-			'config' => array(
+			'config' => [
 				'type' => 'check',
-			),
-		),
-		'starttime' => array(
+			],
+		],
+		'starttime' => [
 			'exclude' => 1,
 			'l10n_mode' => 'mergeIfNotBlank',
 			'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.starttime',
-			'config' => array(
+			'config' => [
 				'type' => 'input',
 				'size' => 13,
 				'max' => 20,
 				'eval' => 'datetime',
 				'checkbox' => 0,
 				'default' => 0,
-				'range' => array(
+				'range' => [
 					'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
-				),
-			),
-		),
-		'endtime' => array(
+				],
+			],
+		],
+		'endtime' => [
 			'exclude' => 1,
 			'l10n_mode' => 'mergeIfNotBlank',
 			'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.endtime',
-			'config' => array(
+			'config' => [
 				'type' => 'input',
 				'size' => 13,
 				'max' => 20,
 				'eval' => 'datetime',
 				'checkbox' => 0,
 				'default' => 0,
-				'range' => array(
+				'range' => [
 					'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
-				),
-			),
-		),
+				],
+			],
+		],
 
-		'title' => array(
+		'title' => [
 			'exclude' => 1,
 			'label' => 'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_db.xlf:tx_hfwuredirects_domain_model_redirects.title',
-			'config' => array(
+			'config' => [
 				'type' => 'input',
 				'size' => 30,
 				'eval' => 'trim,required'
-			),
-		),
-		'is_qr_url' => array(
+			],
+		],
+		'is_qr_url' => [
 			'exclude' => 1,
 			'label' => 'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_db.xlf:tx_hfwuredirects_domain_model_redirects.is_qr_url',
-			'config' => array(
+			'config' => [
 				'type' => 'check',
 				'default' => 1,
-			)
-		),
-		'short_url' => array(
+			]
+		],
+		'short_url' => [
 			'exclude' => 1,
 			'label' => 'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_db.xlf:tx_hfwuredirects_domain_model_redirects.short_url',
-			'config' => array(
+			'config' => [
 				'type' => 'input',
 				'size' => 30,
 				'eval' => 'trim,alphanum_x'
-			),
-		),
-		'url_complete' => array(
+			],
+		],
+		'url_complete' => [
 			'exclude' => 1,
 			'label' => 'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_db.xlf:tx_hfwuredirects_domain_model_redirects.url_complete',
-			'config' => array(
+			'config' => [
 				'type' => 'input',
 				'size' => 30,
 				'eval' => 'trim,domainname'
-			),
-		),
-		'url_hash' => array(
+			],
+		],
+		'url_hash' => [
 			'exclude' => 1,
 			'label' => 'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_db.xlf:tx_hfwuredirects_domain_model_redirects.url_hash',
-			'config' => array(
+			'config' => [
 				'type' => 'input',
 				'size' => 30,
 				'eval' => 'trim'
-			),
-		),
-		'search_word' => array(
+			],
+		],
+		'search_word' => [
 			'exclude' => 1,
 			'label' => 'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_db.xlf:tx_hfwuredirects_domain_model_redirects.search_word',
-			'config' => array(
+			'config' => [
 				'type' => 'input',
 				'size' => 30,
 				'eval' => 'trim'
-			),
-		),
-		'page' => array(
+			],
+		],
+		'page' => [
 			'exclude' => 1,
 			'label' => 'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_db.xlf:tx_hfwuredirects_domain_model_redirects.page',
-			'config' => array(
+			'config' => [
 				'type' => 'input',
 				'size' => 30,
 				'eval' => 'int',
 				'foreign_table' => 'pages',
-				'wizards' => array(
-					'suggest' => array(
-						'type' => 'suggest',
-						'default' => array(
-							'searchWholePhrase' => 1,
-						),
-					),
-				),
-			),
-		),
-		'redirect_count' => array(
+			],
+		],
+		'redirect_count' => [
 			'exclude' => 1,
 			'label' => 'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_db.xlf:tx_hfwuredirects_domain_model_redirects.redirect_count',
-			'config' => array(
+			'config' => [
 				'type' => 'input',
 				'size' => 30,
 				'eval' => 'trim'
-			),
-		),
-		'cruser_id' => array(
+			],
+		],
+		'cruser_id' => [
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_tca.xlf:be_users.username',
-			'config' => array(
+			'config' => [
 				'type' => 'group',
 				'internal_type' => 'db',
 				'allowed' => 'be_users',
 				'size' => '1',
 				'minitems' => '1',
 				'maxitems' => '1',
-			),
-		),
-		'usergroups' => array(
+			],
+		],
+		'usergroups' => [
 			'label' => 'LLL:EXT:lang/locallang_tca.xlf:be_users.group',
-			'config' => array(
+			'config' => [
 				'type' => 'select',
 				'renderType' => 'selectMultipleSideBySide',
 				'itemsProcFunc' => 'HFWU\HfwuRedirects\Utility\Tca\TcaUserFunc->listUserGroups',
-				'size' => '5',
+				'foreign_table' => 'be_groups',
+				'size' => '20',
 				'minitems' => '1',
-				'maxitems' => '5',
-			),
-		),
-	),
-);
+				'maxitems' => '20',
+				'wizards' => [
+					'suggest' => [
+						'type' => 'suggest',
+						'default' => [
+							'searchWholePhrase' => 1,
+						],
+					],
+				],
+			],
+		],
+		'sys_language_uid' => [
+			'exclude' => 1,
+			'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.language',
+			'config' => [
+				'type' => 'select',
+				'renderType' => 'selectSingle',
+				'special' => 'languages',
+				'items' => [
+					[
+						'LLL:EXT:lang/locallang_general.xlf:LGL.allLanguages',-1,'flags-multiple'
+					],
+				],
+				'default' => 0,
+			]
+		],
+	],
+];
 
