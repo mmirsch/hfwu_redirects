@@ -1,10 +1,9 @@
 {namespace vh=HFWU\HfwuRedirects\ViewHelpers}
-
 <f:be.container
 	includeCssFiles="{0: '{f:uri.resource(path:\'Stylesheets/redirects.css\')}'}"
-	includeJsFiles="{0: '{f:uri.resource(path:\'JavaScript/redirects.js\')}'}"
+	includeJsFiles="{0: '{f:uri.resource(path:\'JavaScript/jquery-2.1.4.min.js\')}',
+					1: '{f:uri.resource(path:\'JavaScript/redirects.js\')}'}"
 >
-
 	<div class="typo3-fullDoc">
 		<div id="typo3-docheader">
 			<div class="typo3-docheader-functions">

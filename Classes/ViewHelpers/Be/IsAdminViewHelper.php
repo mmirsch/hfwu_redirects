@@ -1,5 +1,7 @@
 <?php
 namespace HFWU\HfwuRedirects\ViewHelpers\Be;
+
+use HFWU\HfwuRedirects\Utility\BackendUtility;
 use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 
@@ -18,7 +20,7 @@ class IsAdminViewHelper extends AbstractViewHelper {
      * @return bool
      */
     public function render() {
-        return \HFWU\HfwuRedirects\Utility\BackendUtility::isBackendAdmin();
+        return BackendUtility::isBackendAdmin();
     }
 
 

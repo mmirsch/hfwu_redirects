@@ -1,6 +1,7 @@
 <?php
 namespace HFWU\HfwuRedirects\ViewHelpers\Be;
 
+use HFWU\HfwuRedirects\Utility\BackendUtility;
 use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
@@ -20,6 +21,6 @@ class BackendEditLinkViewHelper extends AbstractViewHelper {
      * @return string
      */
     public function render($tableName, $identifier, $addReturnUrl = true) {
-        return \HFWU\HfwuRedirects\Utility\BackendUtility::createEditUri($tableName, $identifier, $addReturnUrl);
+        return BackendUtility::createEditUri($tableName, $identifier, $addReturnUrl);
     }
 }

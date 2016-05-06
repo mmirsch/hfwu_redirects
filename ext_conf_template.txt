@@ -1,21 +1,18 @@
 
 # Options
 ###########################
-# cat=options/list/2; type=int; label=Maximale Anzahl an Einträgen in der Backendansicht
-limit = 50
 
-# cat=options/qr-codes/1; type=int; label=Größe des QR-Codes in Pixel
+# cat=QR-Codes/1; type=string; label=Größe des QR-Codes in Pixel
 qr_imgsize = 400
 
-# cat=options/qr-codes/2; type=int; label=Randabstand in Pixeln
+# cat=QR-Codes/2; type=string; label=Randabstand in Pixeln
 qr_padding = 40
 
-# cat=options/qr-codes/3; type=string; label=Farbton (Hexadezimal)
+# cat=QR-Codes/3; type=string; label=Farbton (Hexadezimal)
 qr_fgcolor = 00308e
 
-# cat=options/admin/6; type=string; label=Systemordner für die zentralen Redirects
+# cat=General/1; type=string; label=Systemordner für die zentralen Redirects
 sysfolder_redirects =
 
-# cat=Options/admin/10; type=options[alle Einträge=all, nur Einträge einer eigenen Gruppe=group, Nur eigene Einträge=user]; label=Berechtigung für Redakteure: Welche Einträge sollen Redakteure bearbeiten dürfen
-access_restriction_mode = all
-
+# cat=General/2; type=options[http=http://, https=https://]; label=Protokoll
+http_protocol = http://

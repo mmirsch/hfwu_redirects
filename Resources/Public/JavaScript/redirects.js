@@ -1,8 +1,8 @@
 
-TYPO3.jQuery.fn.extend({
+$.fn.extend({
     bindWithDelay: function( type, data, fn, timeout, throttle ) {
 
-        if ( TYPO3.jQuery.isFunction( data ) ) {
+        if ( $.isFunction( data ) ) {
             throttle = timeout;
             timeout = fn;
             fn = data;
@@ -10,7 +10,7 @@ TYPO3.jQuery.fn.extend({
         }
 
         // Allow delayed function to be removed with fn in unbind function
-        fn.guid = fn.guid || (TYPO3.jQuery.guid && TYPO3.jQuery.guid++);
+        fn.guid = fn.guid || ($.guid && $.guid++);
 
         // Bind each separately so that each element has its own delay
         return this.each(function() {
@@ -18,7 +18,7 @@ TYPO3.jQuery.fn.extend({
             var wait = null;
 
             function cb() {
-                var e = TYPO3.jQuery.extend(true, { }, arguments[0]);
+                var e = $.extend(true, { }, arguments[0]);
                 var ctx = this;
                 var throttler = function() {
                     wait = null;
@@ -31,45 +31,45 @@ TYPO3.jQuery.fn.extend({
 
             cb.guid = fn.guid;
 
-            TYPO3.jQuery(this).bind(type, data, cb);
+            $(this).bind(type, data, cb);
         });
     }
 });
 
 function processingAnimation(mode,message) {
-    var aHeight = TYPO3.jQuery(window).height();
-    var aWidth = TYPO3.jQuery(window).width();
+    var aHeight = $(window).height();
+    var aWidth = $(window).width();
 
     if (mode=='start') {
-        if (TYPO3.jQuery('#spinOverlay').size()==0) {
-            TYPO3.jQuery('body').append('<div id="spinOverlay"></div>');
-            TYPO3.jQuery('#spinOverlay').css('height', aHeight).css('width', aWidth);
+        if ($('#spinOverlay').size()==0) {
+            $('body').append('<div id="spinOverlay"></div>');
+            $('#spinOverlay').css('height', aHeight).css('width', aWidth);
             if (message) {
-                TYPO3.jQuery('#spinOverlay').append('<div id="spinOverlayMessage">' + message + '</div>');
-                var left = Math.ceil((aWidth - TYPO3.jQuery('#spinOverlayMessage').width()) / 2);
-                var top = Math.ceil((aHeight - TYPO3.jQuery('#spinOverlayMessage').height()) / 2)+30;
-                TYPO3.jQuery('#spinOverlayMessage').css('left', left).css('top', top);
+                $('#spinOverlay').append('<div id="spinOverlayMessage">' + message + '</div>');
+                var left = Math.ceil((aWidth - $('#spinOverlayMessage').width()) / 2);
+                var top = Math.ceil((aHeight - $('#spinOverlayMessage').height()) / 2)+30;
+                $('#spinOverlayMessage').css('left', left).css('top', top);
             }
         }
-        TYPO3.jQuery('#spinOverlay').show();
+        $('#spinOverlay').show();
     } else if (mode=='stop') {
-        if (TYPO3.jQuery('#spinOverlay')) {
-            TYPO3.jQuery('#spinOverlay').remove();
+        if ($('#spinOverlay')) {
+            $('#spinOverlay').remove();
         }
-        if (TYPO3.jQuery('#spinOverlayMessage')) {
-            TYPO3.jQuery('#spinOverlayMessage').remove();
+        if ($('#spinOverlayMessage')) {
+            $('#spinOverlayMessage').remove();
         }
     }
 }
 
 function aliasListAjax() {
     var ajaxUrl = TYPO3.settings.ajaxUrls['HfwuRedirects::aliasList'];
-    var filter = TYPO3.jQuery('#search_filter').val();
-    var pid = TYPO3.jQuery('#pid').val();
-    var limit = TYPO3.jQuery('#limit').val();
-    var site_url = TYPO3.jQuery('#site_url').val();
-    var filter_types = TYPO3.jQuery('#filter_types').val();
-    TYPO3.jQuery.ajax({
+    var filter = $('#search_filter').val();
+    var pid = $('#pid').val();
+    var limit = $('#limit').val();
+    var site_url = $('#site_url').val();
+    var filter_types = $('#filter_types').val();
+    $.ajax({
         url: ajaxUrl,
         type: 'GET',
         dataType: 'html',
@@ -85,10 +85,10 @@ function aliasListAjax() {
             processingAnimation('start','bitte warten');
         },
         success: function (result) {
-            TYPO3.jQuery('#redirect_list').html(result);
+            $('#redirect_list').html(result);
         },
         error: function (error) {
-            TYPO3.jQuery('#redirect_list').html(error);
+            $('#redirect_list').html(error);
         }
     }).always(function() {
         processingAnimation('stop');
@@ -97,7 +97,7 @@ function aliasListAjax() {
 
 function aliasDeleteAjax(uid) {
     var ajaxUrl = TYPO3.settings.ajaxUrls['HfwuRedirects::deleteRedirectEntry'];
-    TYPO3.jQuery.ajax({
+    $.ajax({
         url:       ajaxUrl,
         type:      'GET',
         dataType:  'html',
@@ -118,31 +118,31 @@ function showQrCodeAjax(uid) {
     document.location.href = ajaxUrl;
 }
 
-TYPO3.jQuery(document).ready(function() {
-    TYPO3.jQuery('#search_filter').bindWithDelay('keyup', function (event) {
+$(document).ready(function() {
+    $('#search_filter').bindWithDelay('keyup', function (event) {
          aliasListAjax();
     },300);
-    TYPO3.jQuery('.ajaxFilterReset').on('click', function (event) {
-        TYPO3.jQuery('.ajaxFilter').val('');
-        TYPO3.jQuery('#filter_types').val('all');
+    $('.ajaxFilterReset').on('click', function (event) {
+        $('.ajaxFilter').val('');
+        $('#filter_types').val('all');
         aliasListAjax();
     });
-    TYPO3.jQuery('#redirect_list').on('click', '.deleteEntry', function (event) {
-        var confirmationMessage = TYPO3.jQuery('#deleteConfirmationMessage').val();
+    $('#redirect_list').on('click', '.deleteEntry', function (event) {
+        var confirmationMessage = $('#deleteConfirmationMessage').val();
         if (confirm(confirmationMessage)) {
-            var uid = TYPO3.jQuery(this).attr('data-uid');
+            var uid = $(this).attr('data-uid');
             aliasDeleteAjax(uid);
         }
     });
-    TYPO3.jQuery('#redirect_list').on('click', '.showQrCode', function (event) {
-        var uid = TYPO3.jQuery(this).attr('data-uid');
+    $('#redirect_list').on('click', '.showQrCode', function (event) {
+        var uid = $(this).attr('data-uid');
         showQrCodeAjax(uid);
         return false;
     });
-    TYPO3.jQuery('#filter_types').on('change', function (event) {
+    $('#filter_types').on('change', function (event) {
         aliasListAjax();
     });
-    TYPO3.jQuery('#limit').on('change', function (event) {
+    $('#limit').on('change', function (event) {
         aliasListAjax();
     });
 

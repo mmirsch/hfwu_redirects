@@ -1,8 +1,8 @@
 <?php
 namespace HFWU\HfwuRedirects\Hooks;
 
+use HFWU\HfwuRedirects\Utility\ExtensionUtility;
 use TYPO3\CMS\Core\Exception;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\HttpUtility;
 use TYPO3\CMS\Dbal\Database\DatabaseConnection;
@@ -12,75 +12,112 @@ use TYPO3\CMS\Frontend\Page\PageGenerator;
 
 class RedirectHandling {
 
-	protected static $errorpage='404';
+	protected static $protocol;
 	protected static $testQueryString='redirect_test=1';
 	protected static $rootPid=1;
 	protected static $redirectTable = 'tx_hfwuredirects_domain_model_redirects';
-	protected static $startTime;
+	protected $host;
+	protected $requestUri;
+	protected $absoluteRequestUri;
+	protected $queryString;
+	protected $extensionConfiguration;
 
 	/** @var DatabaseConnection $databaseConnection */
-	protected $databaseConnection;
-	/** @var TypoScriptFrontendController $tsFeController */
-	protected $tsFeController;
-
+	protected static $databaseConnection;
 
 	public function __construct() {
-		$this->databaseConnection = $GLOBALS['TYPO3_DB'];
+		self::$databaseConnection = $GLOBALS['TYPO3_DB'];
+		$extensionConfiguration = ExtensionUtility::getExtensionConfig();
+		if (isset($extensionConfiguration['http_protocol'])) {
+			self::$protocol = $extensionConfiguration['http_protocol'];
+		} else {
+			self::$protocol = 'http://';
+		}
 	}
 
 	/**
 	 * Checks if Redirect is necessary
 	 *
-	 * @param array $params
-	 * @param TypoScriptFrontendController $tsFeController
+	 * @param array $params1
+	 * @param array $params2
 	 * @return void
 	 */
-	function handleRedirects(&$params, &$tsFeController) {
-		$this->tsFeController = $tsFeController;
-		self::$startTime = microtime();
-		$siteScript = $tsFeController->siteScript;
-		$scriptParts = explode('?',$siteScript);
-		$currentUrl = $scriptParts[0];
-		$currentUrl = preg_replace('{^/|/$}','',$currentUrl);
-		if (strpos($currentUrl,'/') !== false) {
-			GeneralUtility::devLog('Alias: ' . $currentUrl . ';' .
-				'ERROR: Wrong ALIAS (contains "/") ;' .
-				'Duration: ' . $duration = microtime() - self::$startTime,
-				'PageNotFoundHandling');
+	function handleRedirects($params1, $params2) {
+		$this->initUrlParts();
+		if (strpos($this->requestUri,'/') !== false) {
 			return;
 		}
-
-		/*
-		 * Check if page is called by backend for testing
-		 */
-		$queryString = $scriptParts[1];
-		$testMode =  (self::$testQueryString === $queryString);
 
 		$redirectTypo3PageId = -1;
 		$redirectCount = 0;
 		$redirectUid = -1;
-		$redirectUrl = $this->getRedirectUrl($currentUrl, $redirectUid, $redirectTypo3PageId, $redirectCount);
+		$redirectUrl = $this->getRedirectUrl($this->requestUri, $redirectUid, $redirectTypo3PageId, $redirectCount);
 
 		if (empty($redirectUrl)) {
-			GeneralUtility::devLog('Alias: ' . $currentUrl . ';' .
-				'ResultUrl: EMPTY! ;' .
-				'Duration: ' . $duration = microtime() - self::$startTime,
-				'PageNotFoundHandling');
 			return;
 		}
 
+		if (self::identicalUris($redirectUrl,$this->absoluteRequestUri)) {
+			return;
+		}
+		/*
+		 * Check if page is called by backend for testing
+		 */
+		$testMode =  (self::$testQueryString === $this->queryString);
 		if (!$testMode) {
-			$this->databaseConnection->exec_UPDATEquery(self::$redirectTable, 'uid=' . (int)$redirectUid, array(
+			self::$databaseConnection->exec_UPDATEquery(self::$redirectTable, 'uid=' . (int)$redirectUid, array(
 				'redirect_count' => (int)$redirectCount + 1
 			));
 		}
-
-		GeneralUtility::devLog('Alias: ' . $currentUrl . ';' .
-			'ResultUrl: ' . $redirectUrl . ';' .
-			'Duration: ' . $duration = microtime() - self::$startTime,
-			'PageNotFoundHandling');
-
 		HttpUtility::redirect($redirectUrl,HttpUtility::HTTP_STATUS_301);
+	}
+
+	protected function initUrlParts() {
+		$siteScript = $_SERVER['REQUEST_URI'];
+		$scriptParts = explode('?',$siteScript);
+		$currentUrl = $scriptParts[0];
+		$this->requestUri = preg_replace('{^/|/$}','',$currentUrl);
+		$this->queryString = $scriptParts[1];
+		$this->host = $_SERVER['HTTP_HOST'];
+		$this->absoluteRequestUri = self::$protocol . $this->host . '/' . $this->requestUri;
+	}
+
+	/*
+	 * checks if two urls are identiccal ignoring host, querystring and trailing slashes
+	 *
+ 	 * @param string $url1
+ 	 * @param string $url2
+	 * return bool
+	 */
+	public static function identicalUris($url1 , $url2) {
+		/*
+		 * eventually remove host
+		 */
+		$host = self::$protocol .  $_SERVER['HTTP_HOST'] . '/';
+		$url1 = str_replace($host, '', $url1);
+		$url2 = str_replace($host, '', $url2);
+		/*
+		 * remove querystring and trailing slashes
+		 */
+		$url1 = trim(explode('?',$url1)[0],' /');
+		$url2 = trim(explode('?',$url2)[0],' /');
+		return strcmp($url1, $url2) === 0;
+	}
+
+	/*
+	 * checks if redirect for pageid results in given url
+	 *
+ 	 * @param int $pageId
+ 	 * @param string $originalUrl
+	 * return bool
+	 */
+
+	public static function redirectLoop($pageId, $originalUrl, $lang=0) {
+		if (empty($pageId) || empty($originalUrl)) {
+			return false;
+		}
+		$redirectUrl = self::getRedirectUrlViaTypolink($pageId, $lang);
+		return self::identicalUris($originalUrl, $redirectUrl);
 	}
 
 	/*
@@ -97,42 +134,37 @@ class RedirectHandling {
 		$redirectCount = 0;
 		$lang = 0;
 		// Check redirect-db for existing entry
-		$resultRedirects = $this->databaseConnection->sql_query(
-			'SELECT uid,url_complete,url_hash,search_word,page,redirect_count,sys_language_uid FROM ' . self::$redirectTable .
-			' WHERE deleted=0 AND hidden=0 AND short_url=' . $this->databaseConnection->fullQuoteStr($shortUrl, self::$redirectTable)
+		$resultRedirects = self::$databaseConnection->sql_query(
+			'SELECT uid,url_complete,search_word,page,redirect_count,sys_language_uid FROM ' . self::$redirectTable .
+			' WHERE deleted=0 AND hidden=0 AND short_url=' . self::$databaseConnection->fullQuoteStr($shortUrl, self::$redirectTable)
 		);
-		if (FALSE !== ($dataRedirects = $this->databaseConnection->sql_fetch_assoc($resultRedirects))) {
+		if (FALSE !== ($dataRedirects = self::$databaseConnection->sql_fetch_assoc($resultRedirects))) {
 			if (!empty($dataRedirects['url_complete'])) {
 				$redirectUrl = $dataRedirects['url_complete'];
 			} else {
 				$redirectTypo3PageId = (int)$dataRedirects['page'];
+				if (empty($redirectTypo3PageId)) {
+					return;
+				}
 				$queryString = '';
 				if (!empty($dataRedirects['search_word'])) {
 					$searchword = str_replace(' ', '+', strtolower($dataRedirects['search_word']));
 					$queryString .= 'q=' . $searchword;
 				}
-				if (!empty($dataRedirects['url_hash'])) {
-					$queryString .= '#' . $dataRedirects['url_hash'];
-				}
-				$redirectCount = $dataRedirects['redirect_count'];
 				$lang = $dataRedirects['sys_language_uid'];
-				$redirectUid = $dataRedirects['uid'];
-			}
-		}
-		$this->databaseConnection->sql_free_result($resultRedirects);
-		if (empty($redirectUrl)) {
-			if (empty($redirectTypo3PageId)) {
-				return;
-			}
-			$redirectUrl = $this->getRedirectUrlViaTypolink($redirectTypo3PageId, $lang);
-			if (!empty($queryString) && !empty($redirectUrl)) {
-				if (strpos('?',$redirectUrl) === false) {
-					$redirectUrl .= '?' . $queryString;
-				} else {
-					$redirectUrl .= '&' . $queryString;
+				$redirectUrl = self::getRedirectUrlViaTypolink($redirectTypo3PageId, $lang);
+				if (!empty($queryString) && !empty($redirectUrl)) {
+					if (strpos('?',$redirectUrl) === false) {
+						$redirectUrl .= '?' . $queryString;
+					} else {
+						$redirectUrl .= '&' . $queryString;
+					}
 				}
 			}
+			$redirectCount = $dataRedirects['redirect_count'];
+			$redirectUid = $dataRedirects['uid'];
 		}
+		self::$databaseConnection->sql_free_result($resultRedirects);
 		return $redirectUrl;
 	}
 
@@ -142,42 +174,38 @@ class RedirectHandling {
 	 * @param int $lang
 	 * @return  void
 	 */
-	protected function getRedirectUrlViaTypolink($redirectTypo3PageId, $lang) {
+	public static function getRedirectUrlViaTypolink($redirectTypo3PageId, $lang=0) {
 		try {
-			$this->initTSFE($redirectTypo3PageId);
-		} catch (Exception $e) {
-			return '';
-		}
-		$conf = array(
-			'parameter' => $redirectTypo3PageId,
-			'forceAbsoluteUrl' => 1,
-		);
-		if ($lang!=0) {
-			$conf['additionalParams'] = '&L=' . $lang;
-		}
-		$redirectUrl = $this->tsFeController->cObj->typoLink_URL($conf);
-		return $redirectUrl;
-	}
-
-	/**
-	 * Initializes TSFE
-	 *
-	 * @param int $pageId
-	 * @return  Exception
-	 */
-	protected function initTSFE($pageId) {
-		try {
-			$this->tsFeController->determineId();
-			$this->tsFeController->initTemplate();
-			$this->tsFeController->getFromCache();
-			$this->tsFeController->getConfigArray();
-			$this->tsFeController->settingLanguage();
-			$this->tsFeController->settingLocale();
-			$this->tsFeController->newCObj();
+			$GLOBALS['TT'] =  GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\TimeTracker\\NullTimeTracker');
+			$GLOBALS['TT']->start();
+			/** @var TypoScriptFrontendController $tsFeController */
+			$tsFeController = GeneralUtility::makeInstance(
+				'TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController',
+				$GLOBALS['TYPO3_CONF_VARS'], self::$rootPid, ''
+			);
+			$GLOBALS['TSFE'] = & $tsFeController;
+			$tsFeController->initFEuser();
+			$tsFeController->determineId();
+			$tsFeController->initTemplate();
+			$tsFeController->getFromCache();
+			$tsFeController->getConfigArray();
+			$tsFeController->settingLanguage();
+			$tsFeController->settingLocale();
+			$tsFeController->newCObj();
+			$conf = array(
+				'parameter' => $redirectTypo3PageId,
+				'forceAbsoluteUrl' => 1,
+			);
+			if ($lang!=0) {
+				$conf['additionalParams'] = '&L=' . $lang;
+			}
+			$redirectUrl = $tsFeController->cObj->typoLink_URL($conf);
+			return $redirectUrl;
 		} catch (Exception $e) {
 			return $e;
 		}
 	}
+
 
 	/**
 	 *
@@ -186,17 +214,7 @@ class RedirectHandling {
 	 * @return  void
 	 */
 	protected function getRedirectUrlViaId($redirectTypo3PageId, $lang) {
-		$redirectUrl = 'http://' . $_SERVER['HTTP_HOST'] . '/index.php?id=' . $redirectTypo3PageId;
-
-		if (ExtensionManagementUtility::isLoaded('realurl')) {
-			$resultRealUrl = $this->databaseConnection->sql_query(
-				'SELECT pagepath FROM tx_realurl_pathcache' .
-				' WHERE page_id=' . (int)$redirectTypo3PageId . ' AND language_id=' . (int)$lang
-			);
-			if (FALSE !== ($dataRealUrl = $this->databaseConnection->sql_fetch_assoc($resultRealUrl))) {
-				$redirectUrl = $dataRealUrl['pagepath'];
-			}
-		}
+		$redirectUrl = self::$protocol . $_SERVER['HTTP_HOST'] . '/index.php?id=' . $redirectTypo3PageId;
 		return $redirectUrl;
 	}
 

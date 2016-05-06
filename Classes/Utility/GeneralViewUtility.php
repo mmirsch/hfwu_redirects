@@ -35,7 +35,6 @@ class GeneralViewUtility {
         $view->assign('admin', $admin);
         $view->assign('filter_types', $filterTypes);
         $view->assign('redirects', $redirects);
-
     }
 
 }

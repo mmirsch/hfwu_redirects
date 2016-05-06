@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2016-04-11T17:05:19Z" product-name="hfwu_redirects">
+	<file source-language="de" datatype="plaintext" original="messages" date="2016-04-11T17:05:19Z" product-name="hfwu_redirects">
 		<header/>
 		<body>
 			<trans-unit id="tx_hfwuredirects_domain_model_redirects">
@@ -24,21 +24,22 @@
 			<trans-unit id="tx_hfwuredirects_domain_model_redirects.page">
 				<source>TYPO3 Seite (Bitte rechts im Suchfeld die ID oder den Seitentitel eintragen)</source>
 			</trans-unit>
+
 			<trans-unit id="error_no_sysfolder_redirects_chosen">
 				<source>Bitte klicken Sie zunächst einen Systemordner für QR-Codes im Seitenbaum an!</source>
 			</trans-unit>
 			<trans-unit id="error_no_sysfolder_redirects_set">
-        <source>Bitte tragen Sie in den Extension-Einstellungen einen Systemordner für die zentralen Redirects ein!</source>
-      </trans-unit>
+				<source>Bitte tragen Sie in den Extension-Einstellungen einen Systemordner für die zentralen Redirects ein!</source>
+			</trans-unit>
 			<trans-unit id="error_no_redirects_pid">
-        <source>Bitte wählen Sie ein Verzeichnis mit QR-Codes/Redirects aus!</source>
-      </trans-unit>
+				<source>Bitte wählen Sie ein Verzeichnis mit QR-Codes/Redirects aus!</source>
+			</trans-unit>
 			<trans-unit id="error_no_qr_pid">
-        <source>Bitte wählen Sie ein Verzeichnis mit QR-Codes aus!</source>
-      </trans-unit>
+				<source>Bitte wählen Sie ein Verzeichnis mit QR-Codes aus!</source>
+			</trans-unit>
 			<trans-unit id="error_no_redirect_entries">
-        <source>In diesem Verzeichnis gibt es keine Einträge!</source>
-      </trans-unit>
+				<source>In diesem Verzeichnis gibt es keine Einträge!</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

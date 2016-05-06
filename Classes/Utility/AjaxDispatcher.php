@@ -2,11 +2,8 @@
 namespace HFWU\HfwuRedirects\Utility;
 
 use HFWU\HfwuRedirects\Domain\Repository\RedirectsRepository;
-use HFWU\HfwuRedirects\Utility\Qr\QrCode;
 use TYPO3\CMS\Core\Http\AjaxRequestHandler;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
 class AjaxDispatcher {
@@ -59,7 +56,7 @@ class AjaxDispatcher {
 			$title = $redirect->getTitle();
 			$siteUrl = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
 			$completeUrl = $siteUrl . $shortUrl;
-			$extensionConfiguration = BackendUtility::getExtensionConfig();
+			$extensionConfiguration = ExtensionUtility::getExtensionConfig();
 			if (isset($extensionConfiguration['qr_imgsize'])) {
 				$size = $extensionConfiguration['qr_imgsize'];
 			} else {
@@ -138,9 +135,10 @@ class AjaxDispatcher {
 
 		/** @var \TYPO3\CMS\Fluid\View\StandaloneView $view */
 		$view = $objectManager->get('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
-		$view->setTemplateRootPaths(array(ExtensionManagementUtility::extPath('hfwu_redirects') . 'Resources/Private/Templates'));
+		$view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('hfwu_redirects') . 'Resources/Private/Templates/Redirects/AliasListAjax.html');
+//		$view->setTemplateRootPaths(array(ExtensionManagementUtility::extPath('hfwu_redirects') . 'Resources/Private/Templates'));
 		$view->setPartialRootPath(ExtensionManagementUtility::extPath('hfwu_redirects') . 'Resources/Private');
-		$view->setTemplate('Redirects/AliasListAjax.html');
+//		$view->setTemplate('Redirects/AliasListAjax.html');
 
 		/** @var \HFWU\HfwuRedirects\Domain\Repository\RedirectsRepository $redirectsRepository */
 		$redirectsRepository = $objectManager->get('HFWU\\HfwuRedirects\\Domain\\Repository\\RedirectsRepository');

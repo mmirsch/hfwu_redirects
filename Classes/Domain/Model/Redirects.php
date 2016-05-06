@@ -53,14 +53,7 @@ class Redirects extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @var string
      */
     protected $urlComplete = '';
-    
-    /**
-     * urlHash
-     *
-     * @var string
-     */
-    protected $urlHash = '';
-    
+
     /**
      * searchWord
      *
@@ -80,14 +73,7 @@ class Redirects extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      *
      * @var \HFWU\HfwuRedirects\Domain\Model\Pages
      */
-    protected $page = NULL;
-
-    /**
-     * usergroups
-     *
-     * @var string
-     */
-    protected $usergroups ;
+    protected $page = '';
 
    /**
      * redirectCount
@@ -166,28 +152,7 @@ class Redirects extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         $this->urlComplete = $urlComplete;
     }
     
-    /**
-     * Returns the urlHash
-     *
-     * @return string $urlHash
-     */
-    public function getUrlHash()
-    {
-        return $this->urlHash;
-    }
-    
-    /**
-     * Sets the urlHash
-     *
-     * @param string $urlHash
-     * @return void
-     */
-    public function setUrlHash($urlHash)
-    {
-        $this->urlHash = $urlHash;
-    }
-    
-    /**
+     /**
      * Returns the searchWord
      *
      * @return string $searchWord
@@ -282,38 +247,5 @@ class Redirects extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
   public function storeRedirectCall() {
     $this->redirectCount++;
   }
-
-  /**
-   * @return string
-   */
-  public function getUsergroups()
-  {
-    return $this->usergroups;
-  }
-
-  /**
-   * @param string $usergroups
-   */
-  public function setUsergroups($usergroups)
-  {
-    $this->usergroups = $usergroups;
-  }
-
-  /**
-   * @return boolean
-   */
-  public function isAccess()
-  {
-    return $this->access;
-  }
-
-  /**
-   * @param boolean $access
-   */
-  public function setAccess($access)
-  {
-    $this->access = $access;
-  }
-
 
 }

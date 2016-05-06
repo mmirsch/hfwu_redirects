@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2016-04-11T17:05:19Z" product-name="hfwu_redirects">
+	<file source-language="de" datatype="plaintext" original="messages" date="2016-04-11T17:05:19Z" product-name="hfwu_redirects">
 		<header/>
 		<body>
 			<trans-unit id="redirects-folder">
@@ -36,6 +36,7 @@
 			<trans-unit id="general.manage_qr_codes">
 				<source>QR-Codes verwalten</source>
 			</trans-unit>
+
 			<trans-unit id="general.entry.no_redirect_entries">
 				<source>In diesem Verzeichnis gibt es noch keine Einträge!</source>
 			</trans-unit>

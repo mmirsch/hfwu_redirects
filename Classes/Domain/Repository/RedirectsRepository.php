@@ -2,7 +2,9 @@
 namespace HFWU\HfwuRedirects\Domain\Repository;
 
 use HFWU\HfwuRedirects\Utility\BackendUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
@@ -38,19 +40,25 @@ class RedirectsRepository extends Repository {
 	/**
 	 * Life cycle method.
 	 *
-	 * @param int $pid
+	 * @param string $filter
 	 * @return void
 	 */
-	public function initializeObject($pid=0) {
+	public function initializeObject($filter='') {
 		/**@var $querySettings \TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings */
 		$querySettings = $this->objectManager->get('TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings');
-		if ($pid) {
-			$querySettings->setStoragePageIds(array($pid));
-		} else {
-			// don't add the pid constraint
-			$querySettings->setRespectStoragePage(FALSE);
-		}
+		/*
+		 * non-admins will only see entries in current sysfolder
+		 */
+		// don't add storage folder constraint
+		$querySettings->setRespectStoragePage(FALSE);
+		// don't add language constraint
 		$querySettings->setRespectSysLanguage(FALSE);
+
+		if (!empty($filter)) {
+			$querySettings->setIgnoreEnableFields(true);
+			$querySettings->setIncludeDeleted(true);
+		}
+
 		$this->setDefaultQuerySettings($querySettings);
 		$this->setDefaultOrderings($this->getDefaultOrderings());
 	}
@@ -67,114 +75,87 @@ class RedirectsRepository extends Repository {
 
 
 	/**
-	 * @return QueryResultInterface|array
-	 */
-	public function getPid() {
-		$this->initializeObject(false);
-		/**@var $resultElem \HFWU\HfwuRedirects\Domain\Model\Redirects */
-		$resultElem = $this->findAll()->getFirst();
-		return $resultElem->getPid();
-	}
-
-	/**
-	 * @param $filter string
+	 * @param string $filter
 	 * @param int $pid
+	 * @param int $limit
+	 * @param bool $admin
+	 * @param string $filterTypes
 	 * @return QueryResultInterface|array
 	 */
-	public function findRedirectsWithSearchWord($filter, $pid, $limit, $admin, $filterTypes)
-	{
-		$this->initializeObject();
+	public function findRedirectsWithSearchWord($filter, $pid, $limit, $admin, $filterTypes)	{
+
+		$this->initializeObject($filter);
 		/** @var \TYPO3\CMS\Extbase\Persistence\QueryInterface $query */
 		$query = $this->createQuery();
-		$queryDefinition = $query->logicalOr (
-			$query->like('shortUrl', '%' . $filter . '%'),
-			$query->logicalOr(
-				$query->like('title', '%' . $filter . '%'),
-				$query->logicalOr(
-					$query->like('urlComplete', '%' . $filter . '%'),
-					$query->like('page.title', '%' . $filter . '%')
-				)
-			)
-		);
-		if (!$admin) {
-			$queryDefinition = $query->logicalAnd (
+
+		/** @var \TYPO3\CMS\Extbase\Persistence\QueryInterface $queryDefinitionBase */
+		$queryDefinitionBase = NULL;
+
+		/** @var \TYPO3\CMS\Extbase\Persistence\QueryInterface $queryDefinition */
+		$queryDefinition = NULL;
+
+		/*
+		 * editors will only view entries in current pid
+		 */
+		if ($admin) {
+			if ($filterTypes==='redirects_only') {
+				$queryDefinitionBase = $query->equals('is_qr_url', 0);
+			} else if ($filterTypes==='qr_codes_only') {
+				$queryDefinitionBase = $query->equals('is_qr_url', 1);
+			}
+		} else {
+			$queryDefinitionBase = $query->logicalAnd(
 				$query->equals('pid', $pid),
-				$queryDefinition
+				$query->equals('is_qr_url', 1)
 			);
 		}
-		if ($filterTypes==='redirects_only') {
-			$queryDefinition = $query->logicalAnd (
-				$query->equals('is_qr_url', 0),
+
+		if (!empty($filter)) {
+			/** @var \TYPO3\CMS\Extbase\Persistence\QueryInterface $queryDefinitionFilter */
+			$queryDefinitionFilter = $query->logicalOr (
+				$query->like('shortUrl', '%' . $filter . '%'),
+				$query->logicalOr(
+					$query->like('title', '%' . $filter . '%'),
+					$query->logicalOr(
+						$query->like('urlComplete', '%' . $filter . '%'),
+						$query->like('page.title', '%' . $filter . '%')
+					)
+				)
+			);
+			if (empty($queryDefinitionBase)) {
+				$queryDefinition = $queryDefinitionFilter;
+			} else {
+				$queryDefinition = $query->logicalAnd(
+					$queryDefinitionBase,
+					$queryDefinitionFilter
+				);
+			}
+			$queryDefinition = $query->logicalAnd(
+				$query->logicalAnd(
+					$query->equals('deleted', '0'),
+					$query->equals('hidden', '0')
+				),
 				$queryDefinition
 			);
-		} else if ($filterTypes==='qr_codes_only') {
-			$queryDefinition = $query->logicalAnd (
-				$query->equals('is_qr_url', 1),
-				$queryDefinition
-			);
+		} else {
+			$queryDefinition = $queryDefinitionBase;
 		}
 		$limit = intval($limit);
 		if (MathUtility::canBeInterpretedAsInteger($limit) && $limit>0) {
 			$query->setLimit($limit);
 		}
-		$queryResult = $query->matching(
-			$queryDefinition
-		)->execute();
-		if ($queryResult->count() > 0 && !$admin) {
-			/**@var array $extensionConfiguration */
-			$extensionConfiguration = BackendUtility::getExtensionConfig();
-			if (isset($extensionConfiguration['access_restriction_mode'])) {
-				$accessRestrictionMode = $extensionConfiguration['access_restriction_mode'];
-			} else {
-				$accessRestrictionMode = 'all';
-			}
-			switch ($accessRestrictionMode) {
-				case 'user':
-					$this->checkUserAccess($queryResult);
-					break;
-				case 'group':
-					$this->checkGroupAccess($queryResult);
-					break;
-				default:
-			// no access restrictions
-			}
+		if (!empty($queryDefinition)) {
+			$query = $query->matching(
+				$queryDefinition
+			);
 		}
+		$queryResult = $query->execute();
 		return $queryResult;
 	}
 
 	/**
-	 * Check if current backend user is member in one of the groups set for each entry
+	 * Delete entry from database
 	 *
-	 * @param $queryResult QueryResultInterface
-	 * @return void
-	 */
-	public function checkGroupAccess(&$queryResult) {
-			$currentUserGroups = BackendUtility::getBackendUserGroups();
-			/**@var $resultElem \HFWU\HfwuRedirects\Domain\Model\Redirects */
-			foreach($queryResult as $resultElem) {
-				$entryGroups = explode(',',$resultElem->getUsergroups());
-				$result = array_intersect($currentUserGroups,$entryGroups);
-				$access = !empty($result);
-				$resultElem->setAccess($access);
-			}
-	}
-
-	/**
-	 * Check if current backend user is creator of entries
-	 *
-	 * @param $queryResult QueryResultInterface
-	 * @return void
-	 */
-	public function checkUserAccess(&$queryResult) {
-		$currentUserId = BackendUtility::getPropertyFromBackendUser('uid');
-		/**@var $resultElem \HFWU\HfwuRedirects\Domain\Model\Redirects */
-		foreach($queryResult as $resultElem) {
-			$access = ($currentUserId === $resultElem->_getProperty('cruser_id'));
-			$resultElem->setAccess($access);
-		}
-	}
-
-		/**
 	 * @param $uid int
 	 * @return String
 	 */

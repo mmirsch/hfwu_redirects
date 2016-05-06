@@ -1,10 +1,22 @@
 {namespace vh=HFWU\HfwuRedirects\ViewHelpers}
 
 <f:layout name="Default" />
+
 <f:section name="content">
-	<h1>Redirects verwalten</h1>
+
+	<f:if condition="{admin}">
+		<f:then>
+			<h1><f:translate key="LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.manage_redirects"></f:translate></h1>
+		</f:then>
+		<f:else>
+			<h1><f:translate key="LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.manage_qr_codes"></f:translate></h1>
+		</f:else>
+	</f:if>
+
 	<f:flashMessages class="message" />
-	<f:if condition="{0:pid,1:redirects} != {0:'',1:''}">
+
+	<f:if condition="{redirects}">
+	<f:then>
 		<f:form.hidden id="deleteConfirmationMessage" value="{f:translate(key: 'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.messages.delete_confirmation_message')}" />
 		<f:form.hidden id="pid" value="{pid}" />
 		<f:form.hidden id="site_url" value="{site_url}" />
@@ -50,5 +62,12 @@
 		<div id="redirect_list" xmlns:f="http://www.w3.org/1999/html">
 			<f:render partial="Redirects/AliasList" arguments="{_all}" />
 		</div>
+	</f:then>
+	<f:else>
+		<h2><f:translate key="LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.entry.no_redirect_entries"></f:translate></h2>
+		<a href="{vh:Be.BackendCreateLink(tableName:'tx_hfwuredirects_domain_model_redirects',identifier:pid)}">
+			<f:form.button class="button"><f:translate key="LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.entry.create"></f:translate></f:form.button>
+		</a>
+	</f:else>
 	</f:if>
 </f:section>

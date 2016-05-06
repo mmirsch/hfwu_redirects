@@ -22,7 +22,7 @@
 					</f:else>
 				</f:if>
 				<td class="redirectCount">{redirect.redirectCount}</td>
-				<td>
+				<td class="actions">
 					<a href="#" target="_blank" data-uid="{redirect.uid}" class="img_link showQrCode" title="{f:translate(key: 'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.create_qr_code')}">
 					<img width="20" height="20" src="{vh:Be.UriResource(path: 'Icons/qr.png')}" />
 					</a>
@@ -30,14 +30,12 @@
 					   target="_blank" class="img_link" href="{siteUrl}/{redirect.shortUrl}?redirect_test=1">
 					<img width="20" height="20" class="testRedirect" src="{vh:Be.UriResource(path: 'Icons/actions-view.svg')}" />
 					</a>
-					<f:if condition="{redirect.access}">
-						<a title="{f:translate(key: 'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.entry.edit')}"
-						   class="img_link" href="{vh:Be.BackendEditLink(tableName:'tx_hfwuredirects_domain_model_redirects',identifier:redirect.uid)}">
-							<img width="20" height="20" class="addRedirect" src="{vh:Be.UriResource(path: 'Icons/actions-open.svg')}" />
-						</a>
-						<img width="20" height="20" data-uid="{redirect.uid}"
-							 class="deleteEntry" title="{f:translate(key: 'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.entry.delete')}" src="{vh:Be.UriResource(path: 'Icons/actions-delete.svg')}" />
-					</f:if>
+					<a title="{f:translate(key: 'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.entry.edit')}"
+					   class="img_link" href="{vh:Be.BackendEditLink(tableName:'tx_hfwuredirects_domain_model_redirects',identifier:redirect.uid)}">
+						<img width="20" height="20" class="addRedirect" src="{vh:Be.UriResource(path: 'Icons/actions-open.svg')}" />
+					</a>
+					<img width="20" height="20" data-uid="{redirect.uid}"
+						 class="deleteEntry" title="{f:translate(key: 'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.entry.delete')}" src="{vh:Be.UriResource(path: 'Icons/actions-delete.svg')}" />
 				</td>
 			</tr>
 		</f:for>

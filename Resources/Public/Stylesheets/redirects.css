@@ -49,7 +49,6 @@ table.tx_hfwuredirects td.title {
     margin: 0;
 }
 
-
 table.tx_hfwuredirects tr:last-child td.title {
     border-bottom: 1px solid #00305d;
 }
@@ -81,4 +80,9 @@ table.tx_hfwuredirects .btn {
 
 table.tx_hfwuredirects .deleteEntry {
     cursor: pointer;
+}
+
+table.tx_hfwuredirects td.actions img:hover {
+    background: #777;
+    opacity: 0.5;
 }
