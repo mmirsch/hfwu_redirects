@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="de" datatype="plaintext" original="messages" date="2016-04-11T17:05:19Z" product-name="hfwu_redirects">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2016-04-11T17:05:19Z" product-name="hfwu_redirects">
 		<header/>
 		<body>
 			<trans-unit id="tx_hfwuredirects_domain_model_redirects">
 				<source>Redirects</source>
 			</trans-unit>
 			<trans-unit id="tx_hfwuredirects_domain_model_redirects.title">
-				<source>Bezeichnung</source>
+				<source>title</source>
 			</trans-unit>
 			<trans-unit id="tx_hfwuredirects_domain_model_redirects.short_url">
-				<source>Short Url</source>
+				<source>shortUrl</source>
 			</trans-unit>
 			<trans-unit id="tx_hfwuredirects_domain_model_redirects.url_complete">
-				<source>Url komplett (TYPO3-Seite wird ignoriert)</source>
+				<source>complete url (TYPO3 page will be ignored)</source>
 			</trans-unit>
 			<trans-unit id="tx_hfwuredirects_domain_model_redirects.search_word">
-				<source>Suchwort (um Akkordeons aufzuklappen)</source>
+				<source>searchword to unfold accordions</source>
 			</trans-unit>
 			<trans-unit id="tx_hfwuredirects_domain_model_redirects.is_qr_url">
-				<source>Eintrag ist Qr-Code</source>
+				<source>entry is qr code</source>
 			</trans-unit>
 			<trans-unit id="tx_hfwuredirects_domain_model_redirects.page">
-				<source>TYPO3 Seite (Bitte rechts im Suchfeld die ID oder den Seitentitel eintragen)</source>
+				<source>TYPO3 page (please enter title or id into the search field)</source>
 			</trans-unit>
+			<trans-unit id="palettes.misc">
+				<source>Misc</source>
+			</trans-unit>
+
 		</body>
 	</file>
 </xliff>

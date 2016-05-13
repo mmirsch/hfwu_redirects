@@ -52,3 +52,6 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['AJAX']['HfwuRedirects::showQrCodeAjax'] = [
 ];
 
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['hfwu_redirects'] = 'HFWU\\HfwuRedirects\\Hooks\\DataHandler';
+
+
+$TYPO3_CONF_VARS['SYS']['lang']['cache']['clear_menu'] = TRUE;

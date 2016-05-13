@@ -30,7 +30,7 @@ return [
 	'types' => [
 		'1' => ['showitem' =>
 			'l10n_parent, l10n_diffsource, title, is_qr_url, short_url, page, url_complete, search_word,' .
-			'--div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access, sys_language_uid, hidden, starttime, endtime'],
+			'--div--;LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_db.xlf:palettes.misc, sys_language_uid, hidden, starttime, endtime'],
 	],
 	'palettes' => [
 		'1' => ['showitem' => ''],
@@ -136,7 +136,6 @@ return [
 						'suggest' => [
 							'type' => 'suggest',
 							'default' => [
-								'title' => 'Bitte den Seitentitel oder die Seiten-ID eingeben',
 								'receiverClass' => 'HFWU\\HfwuRedirects\\Hooks\\SuggestReceiver',
 								'searchWholePhrase' => 1,
 								'searchCondition' => 'doktype<>254',
@@ -144,19 +143,6 @@ return [
 							],
 						],
 					],
-					/*
-					'treeConfig' => [
-						'expandAll' => false,
-						'parentField' => 'pid',
-						'appearance' => [
-							'showHeader' => true,
-						],
-					],
-
-/*
-					'type' => 'input',
-					'foreign_table' => 'pages',
-*/
 				],
 		],
 		'sys_language_uid' => [
@@ -174,6 +160,7 @@ return [
 				'default' => 0,
 			]
 		],
+
 	],
 ];
 

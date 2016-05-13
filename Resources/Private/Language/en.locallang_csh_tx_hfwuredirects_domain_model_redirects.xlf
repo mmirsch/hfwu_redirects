@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="de" datatype="plaintext" original="messages" date="2016-04-11T17:05:19Z" product-name="hfwu_redirects">
+	<file source-language="en" datatype="plaintext" original="messages" date="2016-04-11T17:05:19Z" product-name="hfwu_redirects">
 		<header/>
 		<body>
 			<trans-unit id="title.description">
-				<source>Bezeichnung</source>
+				<source>title</source>
 			</trans-unit>
 			<trans-unit id="short_url.description">
 				<source>shortUrl</source>
 			</trans-unit>
 			<trans-unit id="url_complete.description">
-				<source>Url komplett (TYPO3-Seite wird ignoriert)</source>
+				<source>complete url (TYPO3 page will be ignored)</source>
 			</trans-unit>
 			<trans-unit id="search_word.description">
-				<source>Suchwort (um Akkordeons aufzuklappen)</source>
+				<source>searchword to unfold accordions</source>
 			</trans-unit>
 			<trans-unit id="is_qr_url.description">
-				<source>Eintrag ist Qr-Code</source>
+				<source>entry is qr code</source>
 			</trans-unit>
 			<trans-unit id="page.description">
-				<source>TYPO3 Seite (Bitte rechts im Suchfeld die ID oder den Seitentitel eintragen)</source>
+				<source>TYPO3 page (please enter title or id into the search field)</source>
 			</trans-unit>
 		</body>
 	</file>

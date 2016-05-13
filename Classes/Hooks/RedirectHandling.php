@@ -2,6 +2,7 @@
 namespace HFWU\HfwuRedirects\Hooks;
 
 use HFWU\HfwuRedirects\Utility\ExtensionUtility;
+use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Exception;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\HttpUtility;
@@ -9,6 +10,7 @@ use TYPO3\CMS\Dbal\Database\DatabaseConnection;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Frontend\Page\PageGenerator;
+use TYPO3\CMS\Frontend\Page\PageRepository;
 
 class RedirectHandling {
 
@@ -26,6 +28,7 @@ class RedirectHandling {
 	protected static $databaseConnection;
 
 	public function __construct() {
+		$GLOBALS['TYPO3_DB']->connectDB();
 		self::$databaseConnection = $GLOBALS['TYPO3_DB'];
 		$extensionConfiguration = ExtensionUtility::getExtensionConfig();
 		if (isset($extensionConfiguration['http_protocol'])) {
@@ -176,22 +179,39 @@ class RedirectHandling {
 	 */
 	public static function getRedirectUrlViaTypolink($redirectTypo3PageId, $lang=0) {
 		try {
+
+// start timetracking, used by several methods in TSFE
 			$GLOBALS['TT'] =  GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\TimeTracker\\NullTimeTracker');
 			$GLOBALS['TT']->start();
-			/** @var TypoScriptFrontendController $tsFeController */
-			$tsFeController = GeneralUtility::makeInstance(
+
+// instanciate TSFE object
+			/** @var TypoScriptFrontendController $TSFE */
+			$TSFE = GeneralUtility::makeInstance(
 				'TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController',
-				$GLOBALS['TYPO3_CONF_VARS'], self::$rootPid, ''
+				$GLOBALS['TYPO3_CONF_VARS'], $redirectTypo3PageId, 0
 			);
-			$GLOBALS['TSFE'] = & $tsFeController;
-			$tsFeController->initFEuser();
-			$tsFeController->determineId();
-			$tsFeController->initTemplate();
-			$tsFeController->getFromCache();
-			$tsFeController->getConfigArray();
-			$tsFeController->settingLanguage();
-			$tsFeController->settingLocale();
-			$tsFeController->newCObj();
+
+// global object has to be instantiated because it is referenced by several methods in TSFE
+			$GLOBALS['TSFE'] = &$TSFE;
+
+// fe-user is used for access checks
+			$TSFE->initFEuser();
+
+// checks if the page is in the domain and if its accessible and set several instance variables
+			$TSFE->fetch_the_id();
+
+// init template
+			$TSFE->initTemplate();
+
+// TCA should already be cached and has to be loaded
+			\TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadCachedTca();
+
+// set different kind of configuration values
+			$TSFE->getConfigArray();
+
+//	creates an instance of ContentObjectRenderer to be used for calling typolink
+			$TSFE->newCObj();
+
 			$conf = array(
 				'parameter' => $redirectTypo3PageId,
 				'forceAbsoluteUrl' => 1,
@@ -199,7 +219,9 @@ class RedirectHandling {
 			if ($lang!=0) {
 				$conf['additionalParams'] = '&L=' . $lang;
 			}
-			$redirectUrl = $tsFeController->cObj->typoLink_URL($conf);
+
+// create typolink
+			$redirectUrl = $TSFE->cObj->typoLink_URL($conf);
 			return $redirectUrl;
 		} catch (Exception $e) {
 			return $e;

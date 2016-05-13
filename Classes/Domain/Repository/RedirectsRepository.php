@@ -166,4 +166,23 @@ class RedirectsRepository extends Repository {
 		}
 	}
 
+	/**
+	 * get all system folders containing redirects
+	 *
+	 * @return array
+	 */
+
+	public function findAllPids() {
+		$this->initializeObject();
+		/** @var \TYPO3\CMS\Extbase\Persistence\QueryInterface $query */
+		$query = $this->createQuery();
+		$queryResult = $query->statement('SELECT DISTINCT pid FROM tx_hfwuredirects_domain_model_redirects WHERE deleted=0 AND hidden=0')
+			->execute(true);
+		$result = array();
+		foreach ($queryResult as $elem) {
+			$result[] = intval($elem['pid']);
+		}
+		return $result;
+	}
+
 }

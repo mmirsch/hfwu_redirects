@@ -24,6 +24,9 @@
 			<trans-unit id="tx_hfwuredirects_domain_model_redirects.page">
 				<source>TYPO3 Seite (Bitte rechts im Suchfeld die ID oder den Seitentitel eintragen)</source>
 			</trans-unit>
+			<trans-unit id="palettes.misc">
+				<source>Verschiedenes</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

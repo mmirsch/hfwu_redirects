@@ -3,8 +3,10 @@ namespace HFWU\HfwuRedirects\Utility;
 
 use HFWU\HfwuRedirects\Domain\Repository\RedirectsRepository;
 use TYPO3\CMS\Core\Http\AjaxRequestHandler;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
+use\HFWU\HfwuRedirects\Utility\Qr\QrCode;
 
 class AjaxDispatcher {
 
