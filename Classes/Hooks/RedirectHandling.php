@@ -96,6 +96,15 @@ class RedirectHandling {
 		/*
 		 * eventually remove host
 		 */
+
+		$extensionConfiguration = ExtensionUtility::getExtensionConfig();
+		if (isset($extensionConfiguration['http_protocol'])) {
+			self::$protocol = $extensionConfiguration['http_protocol'];
+		} else {
+			self::$protocol = 'http://';
+		}
+
+
 		$host = self::$protocol .  $_SERVER['HTTP_HOST'] . '/';
 		$url1 = str_replace($host, '', $url1);
 		$url2 = str_replace($host, '', $url2);

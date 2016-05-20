@@ -29,8 +29,7 @@ return [
 	],
 	'types' => [
 		'1' => ['showitem' =>
-			'l10n_parent, l10n_diffsource, title, is_qr_url, short_url, page, url_complete, search_word,' .
-			'--div--;LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_db.xlf:palettes.misc, sys_language_uid, hidden, starttime, endtime'],
+			'l10n_parent, l10n_diffsource, hidden, sys_language_uid, title, is_qr_url, short_url, page, url_complete, search_word'],
 	],
 	'palettes' => [
 		'1' => ['showitem' => ''],
@@ -42,38 +41,6 @@ return [
 			'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.hidden',
 			'config' => [
 				'type' => 'check',
-			],
-		],
-		'starttime' => [
-			'exclude' => 1,
-			'l10n_mode' => 'mergeIfNotBlank',
-			'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.starttime',
-			'config' => [
-				'type' => 'input',
-				'size' => 13,
-				'max' => 20,
-				'eval' => 'datetime',
-				'checkbox' => 0,
-				'default' => 0,
-				'range' => [
-					'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
-				],
-			],
-		],
-		'endtime' => [
-			'exclude' => 1,
-			'l10n_mode' => 'mergeIfNotBlank',
-			'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.endtime',
-			'config' => [
-				'type' => 'input',
-				'size' => 13,
-				'max' => 20,
-				'eval' => 'datetime',
-				'checkbox' => 0,
-				'default' => 0,
-				'range' => [
-					'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
-				],
 			],
 		],
 
@@ -140,6 +107,7 @@ return [
 								'searchWholePhrase' => 1,
 								'searchCondition' => 'doktype<>254',
 								'minimumCharacters' => 1,
+								'depth' => 99,
 							],
 						],
 					],
@@ -160,7 +128,15 @@ return [
 				'default' => 0,
 			]
 		],
-
+		'redirect_count' => [
+			'exclude' => 1,
+			'label' => 'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_db.xlf:tx_hfwuredirects_domain_model_redirects.redirect_count',
+			'config' => [
+				'type' => 'input',
+				'size' => 3,
+				'eval' => 'trim'
+			],
+		],
 	],
 ];
 

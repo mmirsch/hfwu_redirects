@@ -6,7 +6,7 @@ use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
- * BackendEditLinkViewHelper
+ * UriResourceViewHelper
  *
  * @package TYPO3
  * @subpackage Fluid

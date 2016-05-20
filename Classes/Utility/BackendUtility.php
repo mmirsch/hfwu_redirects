@@ -72,7 +72,7 @@ class BackendUtility {
      * @return string
      * @todo remove condition for TYPO3 7.2 in upcoming major version
      */
-    public static function createBackendModuleUri($tableName, $identifier, $mode, $addReturnUrl = true)
+    public static function createBackendModuleUri($tableName, $identifier, $mode, $addReturnUrl, $returnUrl)
     {
         // use new link generation in backend for TYPO3 7.2 or newer
         $t3Version72 = GeneralUtility::compat_version('7.2');
@@ -85,14 +85,23 @@ class BackendUtility {
               ]
             ];
             if ($addReturnUrl) {
-                $uriParameters['returnUrl'] = self::getReturnUrl($t3Version72);
+                if (empty($returnUrl)) {
+                    $uriParameters['returnUrl'] = self::getReturnUrl($t3Version72);
+                } else {
+                    $uriParameters['returnUrl'] = $returnUrl;
+                }
+
             }
             $editLink = BackendUtilityCore::getModuleUrl('record_edit', $uriParameters);
         } else {
             $editLink = self::getSubFolderOfCurrentUrl();
             $editLink .= 'typo3/alt_doc.php?edit[' . $tableName . '][' . $identifier . ']=' . $mode;
             if ($addReturnUrl) {
-                $editLink .= '&returnUrl=' . self::getReturnUrl($t3Version72);
+                if (empty($returnUrl)) {
+                    $editLink .= '&returnUrl=' . self::getReturnUrl($t3Version72);
+                } else {
+                    $editLink .= '&returnUrl=' . $returnUrl;
+                }
             }
         }
         return $editLink;
@@ -106,8 +115,8 @@ class BackendUtility {
      * @param bool $addReturnUrl
      * @return string
      */
-    public static function createNewUri($tableName, $identifier, $addReturnUrl = true) {
-        return self::createBackendModuleUri($tableName, $identifier, 'new', $addReturnUrl);
+    public static function createNewUri($tableName, $identifier, $addReturnUrl = true, $returnUrl='') {
+        return self::createBackendModuleUri($tableName, $identifier, 'new', $addReturnUrl, $returnUrl);
      }
 
     /**
@@ -118,8 +127,8 @@ class BackendUtility {
      * @param bool $addReturnUrl
      * @return string
      */
-    public static function createEditUri($tableName, $identifier, $addReturnUrl = true) {
-        return self::createBackendModuleUri($tableName, $identifier, 'edit', $addReturnUrl);
+    public static function createEditUri($tableName, $identifier, $addReturnUrl = true, $returnUrl='') {
+        return self::createBackendModuleUri($tableName, $identifier, 'edit', $addReturnUrl, $returnUrl);
     }
 
     /**
@@ -129,7 +138,11 @@ class BackendUtility {
      * @return string
      * @todo remove condition for TYPO3 7.2 in upcoming major version
      */
-    protected static function getReturnUrl($t3Version72)    {
+    public static function getReturnUrl($t3Version72='')    {
+        if (empty($t3Version72)) {
+            // use new link generation in backend for TYPO3 7.2 or newer
+            $t3Version72 = GeneralUtility::compat_version('7.2');
+        }
         if ($t3Version72) {
             $uri = self::getModuleUrl(self::getModuleName(), self::getCurrentParameters());
         } else {

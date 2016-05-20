@@ -4,7 +4,7 @@ namespace HFWU\HfwuRedirects\ViewHelpers\Be;
 use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
- * BackendEditLinkViewHelper
+ * BackendCreateLinkViewHelper
  *
  * @package TYPO3
  * @subpackage Fluid
@@ -16,10 +16,11 @@ class BackendCreateLinkViewHelper extends AbstractViewHelper {
      *
      * @param string $tableName
      * @param int $identifier
+     * @param string $returnUrl
      * @param bool $addReturnUrl
      * @return string
      */
-    public function render($tableName, $identifier, $addReturnUrl = true) {
-        return \HFWU\HfwuRedirects\Utility\BackendUtility::createNewUri($tableName, $identifier, $addReturnUrl);
+    public function render($tableName, $identifier, $returnUrl = '', $addReturnUrl = true) {
+        return \HFWU\HfwuRedirects\Utility\BackendUtility::createNewUri($tableName, $identifier, $addReturnUrl, $returnUrl);
     }
 }

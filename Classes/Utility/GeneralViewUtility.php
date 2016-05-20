@@ -19,6 +19,7 @@ class GeneralViewUtility {
      *
      * @param \TYPO3\CMS\Fluid\View\AbstractTemplateView $view
      * @param string $siteUrl
+     * @param string $returnUrl
      * @param string $filter
      * @param int $pid
      * @param int $limit
@@ -26,15 +27,17 @@ class GeneralViewUtility {
      * @param bool $qrcodesOnly
      * @param \TYPO3\CMS\Extbase\Persistence\QueryResultInterface $redirects
      */
-    public static function assignViewArguments($view, $siteUrl, $filter, $pid, $limit, $admin, $filterTypes,QueryResultInterface $redirects)
+    public static function assignViewArguments($view, $siteUrl, $returnUrl, $filter, $pid, $limit, $admin, $filterTypes,QueryResultInterface $redirects)
     {
         $view->assign('siteUrl', $siteUrl);
+        $view->assign('returnUrl', $returnUrl);
         $view->assign('filter', $filter);
         $view->assign('pid', $pid);
         $view->assign('limit', $limit);
         $view->assign('admin', $admin);
         $view->assign('filter_types', $filterTypes);
         $view->assign('redirects', $redirects);
+        $view->assign('error',0);
     }
 
 }

@@ -6,68 +6,87 @@
 
 	<f:if condition="{admin}">
 		<f:then>
-			<h1><f:translate key="LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.manage_redirects"></f:translate></h1>
+			<h1><f:translate key="general.manage_redirects"></f:translate></h1>
 		</f:then>
 		<f:else>
-			<h1><f:translate key="LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.manage_qr_codes"></f:translate></h1>
+			<h1><f:translate key="general.manage_qr_codes"></f:translate></h1>
 		</f:else>
 	</f:if>
 
-	<f:flashMessages class="message" />
+	<f:flashMessages renderMode="div" class="message" />
 
-	<f:if condition="{redirects}">
-	<f:then>
-		<f:form.hidden id="deleteConfirmationMessage" value="{f:translate(key: 'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.messages.delete_confirmation_message')}" />
-		<f:form.hidden id="pid" value="{pid}" />
-		<f:form.hidden id="site_url" value="{site_url}" />
-		<label for="search_filter" class="filter_label">
-			<f:translate key="LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.filter_search"></f:translate>
-		</label>
-		<f:form.textfield
-				type="input"
-				value="<vh:RawAndRemoveXss>{filter}</vh:RawAndRemoveXss>"
-				class="ajaxFilter"
-				id="search_filter" />
-		<f:if condition="{admin}">
-			<f:then>
-				<label for="filter_types" class="filter_label">
-					<f:translate key="LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.filter_types"></f:translate>
-				</label>
-				<f:form.select id="filter_types" value="{filter_types}" options="{
-					all:'{f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.all\')}',
-					redirects_only:'{f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.redirects_only\')}',
-					qr_codes_only:'{f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.qr_codes_only\')}'
+	<f:if condition="{pid}">
+		<f:then>
+			<f:if condition="{redirects}">
+				<f:then>
+					<f:form.hidden id="deleteConfirmationMessage" value="{f:translate(key: 'general.messages.delete_confirmation_message')}" />
+					<f:form.hidden id="pid" value="{pid}" />
+					<f:form.hidden id="site_url" value="{siteUrl}" />
+					<f:form.hidden id="return_url" value="{returnUrl}" />
+
+					<label for="search_filter" class="filter_label">
+						<f:translate key="general.display.filter_search"></f:translate>
+					</label>
+					<input type="text"
+						   value="<vh:RawAndRemoveXss>{filter}</vh:RawAndRemoveXss>"
+						   class="ajaxFilter"
+						   id="search_filter"
+						   data-url="<f:uri.action action='showListAjax' noCacheHash='TRUE' />"
+							/>
+<f:comment>
+
+	<f:form.textfield
+			type="input"
+			value="<vh:RawAndRemoveXss>{filter}</vh:RawAndRemoveXss>"
+			class="ajaxFilter"
+			id="search_filter"
+			/>
+
+</f:comment>
+
+					<f:if condition="{admin}">
+						<f:then>
+							<label for="filter_types" class="filter_label">
+								<f:translate key="general.display.filter_types"></f:translate>
+							</label>
+							<f:form.select id="filter_types" value="{filter_types}" options="{
+					all:'{f:translate(key: \'general.display.all\')}',
+					redirects_only:'{f:translate(key: \'general.display.redirects_only\')}',
+					qr_codes_only:'{f:translate(key: \'general.display.qr_codes_only\')}'
 				}"  />
-				<label for="limit" class="filter_label">
-					<f:translate key="LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.filter_limit"></f:translate>
-				</label>
-				<f:form.select id="limit" value="{limit}" options="{
-					99999:'{f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.show_all_entries\')}',
-					10:'10 {f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.show_entries\')}',
-					20:'20 {f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.show_entries\')}',
-					50:'50 {f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.show_entries\')}',
-					100:'100 {f:translate(key: \'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.show_entries\')}'
+							<label for="limit" class="filter_label">
+								<f:translate key="general.display.filter_limit"></f:translate>
+							</label>
+							<f:form.select id="limit" value="{limit}" options="{
+					99999:'{f:translate(key: \'general.display.show_all_entries\')}',
+					10:'10 {f:translate(key: \'general.display.show_entries\')}',
+					20:'20 {f:translate(key: \'general.display.show_entries\')}',
+					50:'50 {f:translate(key: \'general.display.show_entries\')}',
+					100:'100 {f:translate(key: \'general.display.show_entries\')}'
 				}"  />
-			</f:then>
-			<f:else>
-				<f:form.hidden id="filter_types" value="qr_codes_only" />
-				<f:form.hidden id="limit" value="{limit}" />
-			</f:else>
+						</f:then>
+						<f:else>
+							<f:form.hidden id="filter_types" value="qr_codes_only" />
+							<f:form.hidden id="limit" value="{limit}" />
+						</f:else>
+					</f:if>
+					<br />
+					<f:form.button class="ajaxFilterReset"><f:translate key="general.display.all"></f:translate></f:form.button>
+					<a href="{vh:Be.BackendCreateLink(tableName:'tx_hfwuredirects_domain_model_redirects',identifier:pid, returnUrl:returnUrl)}">
+						<f:form.button class="button"><f:translate key="general.entry.create"></f:translate></f:form.button>
+					</a>
+					<div id="redirect_list" xmlns:f="http://www.w3.org/1999/html">
+						<f:render partial="Redirects/AliasList" arguments="{_all}" />
+					</div>
+				</f:then>
+				<f:else>
+					<h2><f:translate key="general.entry.no_redirect_entries"></f:translate></h2>
+					<a href="{vh:Be.BackendCreateLink(tableName:'tx_hfwuredirects_domain_model_redirects',identifier:pid, returnUrl:returnUrl)}">
+						<f:form.button class="button"><f:translate key="general.entry.create"></f:translate></f:form.button>
+					</a>
+				</f:else>
+			</f:if>
+		</f:then>
 		</f:if>
-		<br />
-		<f:form.button class="ajaxFilterReset"><f:translate key="LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.display.all"></f:translate></f:form.button>
-		<a href="{vh:Be.BackendCreateLink(tableName:'tx_hfwuredirects_domain_model_redirects',identifier:pid)}">
-			<f:form.button class="button"><f:translate key="LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.entry.create"></f:translate></f:form.button>
-		</a>
-		<div id="redirect_list" xmlns:f="http://www.w3.org/1999/html">
-			<f:render partial="Redirects/AliasList" arguments="{_all}" />
-		</div>
-	</f:then>
-	<f:else>
-		<h2><f:translate key="LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.entry.no_redirect_entries"></f:translate></h2>
-		<a href="{vh:Be.BackendCreateLink(tableName:'tx_hfwuredirects_domain_model_redirects',identifier:pid)}">
-			<f:form.button class="button"><f:translate key="LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_be.xlf:general.entry.create"></f:translate></f:form.button>
-		</a>
-	</f:else>
-	</f:if>
 </f:section>
+

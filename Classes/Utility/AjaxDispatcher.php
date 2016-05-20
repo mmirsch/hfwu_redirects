@@ -131,6 +131,8 @@ class AjaxDispatcher {
 		$limit = $getVars['limit'];
 		$filterTypes = $getVars['filter_types'];
 		$siteUrl = $getVars['site_url'];
+		$returnUrl = $getVars['return_url'];
+
 		$admin = BackendUtility::isBackendAdmin();
 		/** @var $objectManager \TYPO3\CMS\Extbase\Object\ObjectManager */
 		$objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
@@ -146,7 +148,7 @@ class AjaxDispatcher {
 		$redirectsRepository = $objectManager->get('HFWU\\HfwuRedirects\\Domain\\Repository\\RedirectsRepository');
 		$redirects = $redirectsRepository->findRedirectsWithSearchWord($filter, $pid, $limit, $admin, $filterTypes);
 		if ($redirects->count() > 0) {
-			GeneralViewUtility::assignViewArguments($view, $siteUrl, $filter, $pid, $limit, $admin, $filterTypes, $redirects);
+			GeneralViewUtility::assignViewArguments($view, $siteUrl, $returnUrl, $filter, $pid, $limit, $admin, $filterTypes, $redirects);
 		}
 		$output = $view->render();
 		echo $output;

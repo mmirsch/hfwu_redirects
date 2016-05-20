@@ -13,3 +13,9 @@ config.tx_extbase {
 		}
 	}
 }
+
+module.tx_hfwuredirects_web_hfwuredirectsredirects {
+	pageMounts {
+
+	}
+}

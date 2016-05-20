@@ -94,7 +94,7 @@ class RedirectsController extends ActionController
 			 */
 			if (empty($this->currentExtensionConfig['sysfolder_redirects'])) {
 				$this->addFlashMessage(
-					LocalizationUtility::translate('error_no_sysfolder_redirects_set', 'hfwu_redirects'), '', AbstractMessage::ERROR
+					LocalizationUtility::translate('error.no_sysfolder_redirects_set', 'hfwu_redirects'), '', AbstractMessage::ERROR
 				);
 				return;
 			}
@@ -121,7 +121,7 @@ class RedirectsController extends ActionController
 			}
 			if ($pid === 0) {
 				$this->addFlashMessage(
-					LocalizationUtility::translate('error_no_sysfolder_redirects_chosen', 'hfwu_redirects'), '', AbstractMessage::ERROR
+					LocalizationUtility::translate('error.no_sysfolder_redirects_chosen', 'hfwu_redirects'), '', AbstractMessage::ERROR
 				);
 				return;
 			}
@@ -133,14 +133,15 @@ class RedirectsController extends ActionController
 
 		if (!$pid) {
 			$this->addFlashMessage(
-				LocalizationUtility::translate('error_no_redirects_pid', 'hfwu_redirects'), '', AbstractMessage::ERROR
+				LocalizationUtility::translate('error.no_redirects_pid', 'hfwu_redirects'), '', AbstractMessage::ERROR
 			);
 		} else {
 			$filter = $this->getArgument('filter');
+			$returnUrl = BackendUtility::getReturnUrl();
 			/** @var QueryResultInterface $redirects */
 			$redirects = $this->redirectsRepository->findRedirectsWithSearchWord($filter, $pid, $limit, $admin, $filterTypes);
 			$siteUrl = 'http://' . GeneralUtility::getIndpEnv('HTTP_HOST');
-			GeneralViewUtility::assignViewArguments($this->view, $siteUrl, $filter, $pid, $limit, $admin, $filterTypes, $redirects);
+			GeneralViewUtility::assignViewArguments($this->view, $siteUrl, $returnUrl, $filter, $pid, $limit, $admin, $filterTypes, $redirects);
 		}
 	}
 

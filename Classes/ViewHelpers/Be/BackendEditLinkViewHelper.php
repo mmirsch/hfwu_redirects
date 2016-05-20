@@ -17,10 +17,11 @@ class BackendEditLinkViewHelper extends AbstractViewHelper {
      *
      * @param string $tableName
      * @param int $identifier
+     * @param string $returnUrl
      * @param bool $addReturnUrl
      * @return string
      */
-    public function render($tableName, $identifier, $addReturnUrl = true) {
-        return BackendUtility::createEditUri($tableName, $identifier, $addReturnUrl);
+    public function render($tableName, $identifier, $returnUrl = '', $addReturnUrl = true) {
+        return BackendUtility::createEditUri($tableName, $identifier, $addReturnUrl, $returnUrl);
     }
 }

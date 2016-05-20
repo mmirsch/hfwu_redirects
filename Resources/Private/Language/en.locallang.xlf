@@ -29,19 +29,19 @@
 			</trans-unit>
 
 
-			<trans-unit id="error_no_sysfolder_redirects_chosen">
+			<trans-unit id="error.no_sysfolder_redirects_chosen">
 				<source>please select a sysfolder for qr codes in pagetree!</source>
 			</trans-unit>
-			<trans-unit id="error_no_sysfolder_redirects_set">
+			<trans-unit id="error.no_sysfolder_redirects_set">
 				<source>please enter the sysfolder-id for redirects in the extension settings!</source>
 			</trans-unit>
-			<trans-unit id="error_no_redirects_pid">
+			<trans-unit id="error.no_redirects_pid">
 				<source>please select a sysfolder with qr codes/redirects!</source>
 			</trans-unit>
-			<trans-unit id="error_no_qr_pid">
+			<trans-unit id="error.no_qr_pid">
 				<source>please select a sysfolder with qr codes!</source>
 			</trans-unit>
-			<trans-unit id="error_no_redirect_entries">
+			<trans-unit id="error.no_redirect_entries">
 				<source>no entries in this folder</source>
 			</trans-unit>
 		</body>

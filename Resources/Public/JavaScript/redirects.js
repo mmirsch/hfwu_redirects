@@ -68,7 +68,9 @@ function aliasListAjax() {
     var pid = $('#pid').val();
     var limit = $('#limit').val();
     var site_url = $('#site_url').val();
+    var return_url = $('#return_url').val();
     var filter_types = $('#filter_types').val();
+
     $.ajax({
         url: ajaxUrl,
         type: 'GET',
@@ -78,6 +80,7 @@ function aliasListAjax() {
             pid: pid,
             limit: limit,
             site_url: site_url,
+            return_url: return_url,
             filter_types: filter_types
 
         },
