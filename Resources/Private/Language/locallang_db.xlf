@@ -7,25 +7,29 @@
 				<source>Redirects</source>
 			</trans-unit>
 			<trans-unit id="tx_hfwuredirects_domain_model_redirects.title">
-				<source>Bezeichnung</source>
+				<source>Description</source>
 			</trans-unit>
 			<trans-unit id="tx_hfwuredirects_domain_model_redirects.short_url">
 				<source>Short Url</source>
 			</trans-unit>
 			<trans-unit id="tx_hfwuredirects_domain_model_redirects.url_complete">
-				<source>Url komplett (TYPO3-Seite wird ignoriert)</source>
+				<source>Complete Url (TYPO3- page will be ignored)</source>
 			</trans-unit>
 			<trans-unit id="tx_hfwuredirects_domain_model_redirects.search_word">
-				<source>Suchwort (um Akkordeons aufzuklappen)</source>
+				<source>Additional param (e.g. to enable certain accordion)</source>
 			</trans-unit>
 			<trans-unit id="tx_hfwuredirects_domain_model_redirects.is_qr_url">
-				<source>Eintrag ist Qr-Code</source>
+				<source>Entry is Qr-Code</source>
 			</trans-unit>
 			<trans-unit id="tx_hfwuredirects_domain_model_redirects.page">
-				<source>TYPO3 Seite (Bitte rechts im Suchfeld die ID oder den Seitentitel eintragen)</source>
+				<source>TYPO3 page (Please enter ID or page title in search field)</source>
 			</trans-unit>
+			<trans-unit id="tx_hfwuredirects_domain_model_redirects.redirect_count">
+				<source>Number of redirect calls</source>
+			</trans-unit>
+
 			<trans-unit id="palettes.misc">
-				<source>Verschiedenes</source>
+				<source>Misc</source>
 			</trans-unit>
 		</body>
 	</file>

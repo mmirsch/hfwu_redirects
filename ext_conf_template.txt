@@ -22,4 +22,3 @@ suggest_allowed_pages =
 
 # cat=General/4; type=string; label=kommaseparierte Liste von Seiten, die bei der Seiten-Suche (incl. Unterseiten) für suggest ignoriert werden werden
 suggest_forbidden_pages =
-

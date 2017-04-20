@@ -21,13 +21,13 @@ class AjaxDispatcher {
 		$uid = $getVars['uid'];
 
 		/** @var $objectManager \TYPO3\CMS\Extbase\Object\ObjectManager */
-		$objectManager = GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
+		$objectManager = GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Object\ObjectManager::class);
 
 		/** @var \HFWU\HfwuRedirects\Domain\Repository\RedirectsRepository $redirectsRepository */
-		$redirectsRepository = $objectManager->get('HFWU\\HfwuRedirects\\Domain\\Repository\\RedirectsRepository');
+		$redirectsRepository = $objectManager->get(\HFWU\HfwuRedirects\Domain\Repository\RedirectsRepository::class);
 
 		$redirectsRepository->removeEntry($uid);
-		$objectManager->get('TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface')->persistAll();
+		$objectManager->get(\TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface::class)->persistAll();
 
 		exit();
 	}
@@ -45,10 +45,10 @@ class AjaxDispatcher {
 		$getVars = GeneralUtility::_GET();
 		$uid = $getVars['uid'];
 		/** @var $objectManager \TYPO3\CMS\Extbase\Object\ObjectManager */
-		$objectManager = GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
+		$objectManager = GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Object\ObjectManager::class);
 
 		/** @var \HFWU\HfwuRedirects\Domain\Repository\RedirectsRepository $redirectsRepository */
-		$redirectsRepository = $objectManager->get('HFWU\\HfwuRedirects\\Domain\\Repository\\RedirectsRepository');
+		$redirectsRepository = $objectManager->get(\HFWU\HfwuRedirects\Domain\Repository\RedirectsRepository::class);
 
 		/** @var \HFWU\HfwuRedirects\Domain\Model\Redirects $redirect */
 		$redirect = $redirectsRepository->findByUid($uid);
@@ -86,7 +86,7 @@ class AjaxDispatcher {
 			}
 
 			/** @var $qrCode \HFWU\HfwuRedirects\Utility\Qr\QrCode */
-			$qrCode = $objectManager->get('HFWU\HfwuRedirects\Utility\Qr\QrCode');
+			$qrCode = $objectManager->get(\HFWU\HfwuRedirects\Utility\Qr\QrCode::class);
 
 			$qrCode->setText($completeUrl)
 				->setSize($size)
@@ -98,11 +98,11 @@ class AjaxDispatcher {
 
 			$filename = 'qrcode_' . $title . '.png';
 			/** @var $filenameCleaner \TYPO3\CMS\Core\Resource\Driver\LocalDriver */
-			$filenameCleaner = $objectManager->get('TYPO3\CMS\Core\Resource\Driver\LocalDriver');
+			$filenameCleaner = $objectManager->get(\TYPO3\CMS\Core\Resource\Driver\LocalDriver::class);
 			$filename = $filenameCleaner->sanitizeFileName($filename);
 
 			/**@var \TYPO3\CMS\Extbase\Mvc\Web\Response $response */
-			$response = $objectManager->get('TYPO3\CMS\Extbase\Mvc\Web\Response');
+			$response = $objectManager->get(\TYPO3\CMS\Extbase\Mvc\Web\Response::class);
 			$response->setHeader('Cache-control', 'public', TRUE);
 			$response->setHeader('Content-Description', 'File transfer', TRUE);
 			$response->setHeader('Content-Disposition', 'attachment; filename=' . $filename, TRUE);
@@ -135,17 +135,17 @@ class AjaxDispatcher {
 
 		$admin = BackendUtility::isBackendAdmin();
 		/** @var $objectManager \TYPO3\CMS\Extbase\Object\ObjectManager */
-		$objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
+		$objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Object\ObjectManager::class);
 
 		/** @var \TYPO3\CMS\Fluid\View\StandaloneView $view */
-		$view = $objectManager->get('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
+		$view = $objectManager->get(\TYPO3\CMS\Fluid\View\StandaloneView::class);
 		$view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('hfwu_redirects') . 'Resources/Private/Templates/Redirects/AliasListAjax.html');
 //		$view->setTemplateRootPaths(array(ExtensionManagementUtility::extPath('hfwu_redirects') . 'Resources/Private/Templates'));
 		$view->setPartialRootPath(ExtensionManagementUtility::extPath('hfwu_redirects') . 'Resources/Private');
 //		$view->setTemplate('Redirects/AliasListAjax.html');
 
 		/** @var \HFWU\HfwuRedirects\Domain\Repository\RedirectsRepository $redirectsRepository */
-		$redirectsRepository = $objectManager->get('HFWU\\HfwuRedirects\\Domain\\Repository\\RedirectsRepository');
+		$redirectsRepository = $objectManager->get(\HFWU\HfwuRedirects\Domain\Repository\RedirectsRepository::class);
 		$redirects = $redirectsRepository->findRedirectsWithSearchWord($filter, $pid, $limit, $admin, $filterTypes);
 		if ($redirects->count() > 0) {
 			GeneralViewUtility::assignViewArguments($view, $siteUrl, $returnUrl, $filter, $pid, $limit, $admin, $filterTypes, $redirects);

@@ -62,28 +62,38 @@ function processingAnimation(mode,message) {
     }
 }
 
-function aliasListAjax() {
-    var ajaxUrl = TYPO3.settings.ajaxUrls['HfwuRedirects::aliasList'];
-    var filter = $('#search_filter').val();
-    var pid = $('#pid').val();
-    var limit = $('#limit').val();
-    var site_url = $('#site_url').val();
-    var return_url = $('#return_url').val();
-    var filter_types = $('#filter_types').val();
+function getAjaxParams() {
+    var argument_key = $('#argument_key').val();
+    var args;
+    var argsArray = new Array();
+    $(".ajaxParam").each(function() {
+        var name;
+        var value;
+        value = $(this).val();
+        name = $(this).attr('data-param-name');
+        argsArray.push(argument_key + '[' + name + ']=' + value);
+    });
+    args = argsArray.join('&');
+    return args;
+}
 
+function resetFormFields() {
+    $(".ajaxReset").each(function() {
+        $(this).val($(this).attr('data-default-value'));
+    });
+}
+
+function aliasListAjax() {
+    var ajaxUrl = $('#ajax_url_list').val();
+    var args;
+
+    args = getAjaxParams();
     $.ajax({
         url: ajaxUrl,
         type: 'GET',
         dataType: 'html',
-        data: {
-            filter: filter,
-            pid: pid,
-            limit: limit,
-            site_url: site_url,
-            return_url: return_url,
-            filter_types: filter_types
+        data: args,
 
-        },
         beforeSend : function(){
             processingAnimation('start','bitte warten');
         },
@@ -99,14 +109,14 @@ function aliasListAjax() {
 }
 
 function aliasDeleteAjax(uid) {
-    var ajaxUrl = TYPO3.settings.ajaxUrls['HfwuRedirects::deleteRedirectEntry'];
+    var ajaxUrl = $('#ajax_url_delete_entry').val();
+    var argument_key = $('#argument_key').val();
+    var args =  argument_key + '[uid]=' + uid;
     $.ajax({
         url:       ajaxUrl,
         type:      'GET',
         dataType:  'html',
-        data: {
-            uid: uid
-        },
+        data: args,
         success: function (result) {
             aliasListAjax();
         },
@@ -117,8 +127,9 @@ function aliasDeleteAjax(uid) {
 }
 
 function showQrCodeAjax(uid) {
-    var ajaxUrl = TYPO3.settings.ajaxUrls['HfwuRedirects::showQrCodeAjax'] + '&uid=' + uid;
-    document.location.href = ajaxUrl;
+    var ajaxUrl = $('#ajax_url_show_qrcode').val();
+    var argument_key = $('#argument_key').val();
+    document.location.href = ajaxUrl + '&' + argument_key + '[uid]=' + uid;
 }
 
 $(document).ready(function() {
@@ -126,8 +137,7 @@ $(document).ready(function() {
          aliasListAjax();
     },300);
     $('.ajaxFilterReset').on('click', function (event) {
-        $('.ajaxFilter').val('');
-        $('#filter_types').val('all');
+        resetFormFields();
         aliasListAjax();
     });
     $('#redirect_list').on('click', '.deleteEntry', function (event) {

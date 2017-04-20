@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages" date="2016-06-06T10:28:35Z" product-name="hfwu_redirects">
+        <header/>
+        <body>
+            <trans-unit id="tx_hfwuredirects_domain_model_redirects">
+                <source>Redirects</source>
+                <target state="translated">Redirects</target>
+            </trans-unit>
+            <trans-unit id="tx_hfwuredirects_domain_model_redirects.title">
+                <source>Description</source>
+                <target state="translated">Bezeichnung</target>
+            </trans-unit>
+            <trans-unit id="tx_hfwuredirects_domain_model_redirects.short_url">
+                <source>Short Url</source>
+                <target state="translated">Short Url</target>
+            </trans-unit>
+            <trans-unit id="tx_hfwuredirects_domain_model_redirects.url_complete">
+                <source>Complete Url (TYPO3- page will be ignored)</source>
+                <target state="translated">Short Url</target>
+            </trans-unit>
+            <trans-unit id="tx_hfwuredirects_domain_model_redirects.search_word">
+                <source>Additional param (e.g. to enable certain accordion)</source>
+                <target state="translated">Zusätzlicher Parameter (z.B. um Akkordeons aufzuklappen)</target>
+            </trans-unit>
+            <trans-unit id="tx_hfwuredirects_domain_model_redirects.is_qr_url">
+                <source>Entry is Qr-Code</source>
+                <target state="translated">Eintrag ist Qr-Code</target>
+            </trans-unit>
+            <trans-unit id="tx_hfwuredirects_domain_model_redirects.page">
+                <source>TYPO3 page (Please enter ID or page title in search field)</source>
+                <target state="translated">TYPO3 Seite (Bitte rechts im Suchfeld die ID oder den Seitentitel eintragen)</target>
+            </trans-unit>
+            <trans-unit id="tx_hfwuredirects_domain_model_redirects.redirect_count">
+                <source>Number of redirect calls</source>
+                <target state="translated">Anzahl der Aufrufe</target>
+            </trans-unit>
+
+            <trans-unit id="palettes.misc">
+                <source>Misc</source>
+                <target state="translated">Verschiedenes</target>
+            </trans-unit>
+
+        </body>
+    </file>
+</xliff>

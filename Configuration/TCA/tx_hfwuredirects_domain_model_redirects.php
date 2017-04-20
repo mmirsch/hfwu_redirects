@@ -29,7 +29,7 @@ return [
 	],
 	'types' => [
 		'1' => ['showitem' =>
-			'l10n_parent, l10n_diffsource, hidden, sys_language_uid, title, is_qr_url, short_url, page, url_complete, search_word'],
+			'l10n_parent, l10n_diffsource, hidden, sys_language_uid, title, is_qr_url, short_url, page, url_complete, search_word, redirect_count'],
 	],
 	'palettes' => [
 		'1' => ['showitem' => ''],
@@ -54,6 +54,7 @@ return [
 			],
 		],
 		'is_qr_url' => [
+			'displayCond' => 'HIDE_FOR_NON_ADMINS',
 			'exclude' => 1,
 			'label' => 'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_db.xlf:tx_hfwuredirects_domain_model_redirects.is_qr_url',
 			'config' => [
@@ -62,6 +63,7 @@ return [
 			]
 		],
 		'short_url' => [
+			'displayCond' => 'HIDE_FOR_NON_ADMINS',
 			'exclude' => 1,
 			'label' => 'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_db.xlf:tx_hfwuredirects_domain_model_redirects.short_url',
 			'config' => [
@@ -103,11 +105,11 @@ return [
 						'suggest' => [
 							'type' => 'suggest',
 							'default' => [
-								'receiverClass' => 'HFWU\\HfwuRedirects\\Hooks\\SuggestReceiver',
+//								'receiverClass' => 'HFWU\\HfwuRedirects\\Hooks\\SuggestReceiver',
 								'searchWholePhrase' => 1,
 								'searchCondition' => 'doktype<>254',
 								'minimumCharacters' => 1,
-								'depth' => 99,
+//								'depth' => 99,
 							],
 						],
 					],
@@ -129,6 +131,7 @@ return [
 			]
 		],
 		'redirect_count' => [
+			'displayCond' => 'HIDE_FOR_NON_ADMINS',
 			'exclude' => 1,
 			'label' => 'LLL:EXT:hfwu_redirects/Resources/Private/Language/locallang_db.xlf:tx_hfwuredirects_domain_model_redirects.redirect_count',
 			'config' => [

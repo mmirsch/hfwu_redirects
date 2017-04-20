@@ -11,6 +11,7 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Frontend\Page\PageGenerator;
 use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Frontend\Utility\EidUtility;
 
 class RedirectHandling {
 
@@ -111,8 +112,8 @@ class RedirectHandling {
 		/*
 		 * remove querystring and trailing slashes
 		 */
-		$url1 = trim(explode('?',$url1)[0],' /');
-		$url2 = trim(explode('?',$url2)[0],' /');
+		$url1 = strtolower(trim(explode('?',$url1)[0],' /'));
+		$url2 = strtolower(trim(explode('?',$url2)[0],' /'));
 		return strcmp($url1, $url2) === 0;
 	}
 
@@ -196,12 +197,15 @@ class RedirectHandling {
 // instanciate TSFE object
 			/** @var TypoScriptFrontendController $TSFE */
 			$TSFE = GeneralUtility::makeInstance(
-				'TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController',
+				\TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController::class,
 				$GLOBALS['TYPO3_CONF_VARS'], $redirectTypo3PageId, 0
 			);
 
 // global object has to be instantiated because it is referenced by several methods in TSFE
 			$GLOBALS['TSFE'] = &$TSFE;
+
+// TCA should already be cached and has to be loaded
+			EidUtility::initTca();
 
 // fe-user is used for access checks
 			$TSFE->initFEuser();
@@ -212,8 +216,6 @@ class RedirectHandling {
 // init template
 			$TSFE->initTemplate();
 
-// TCA should already be cached and has to be loaded
-			\TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadCachedTca();
 
 // set different kind of configuration values
 			$TSFE->getConfigArray();

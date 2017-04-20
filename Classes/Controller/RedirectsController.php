@@ -3,10 +3,10 @@ namespace HFWU\HfwuRedirects\Controller;
 
 use HFWU\HfwuRedirects\Domain\Repository\RedirectsRepository;
 use HFWU\HfwuRedirects\Domain\Model\Redirects;
-
 use HFWU\HfwuRedirects\Utility\BackendUtility;
 use HFWU\HfwuRedirects\Utility\ExtensionUtility;
 use HFWU\HfwuRedirects\Utility\GeneralViewUtility;
+
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
@@ -74,15 +74,111 @@ class RedirectsController extends ActionController
 	 */
 	public function aliasListAction()
 	{
-		$this->assignView();
+		$this->assignListView();
 	}
+
+	/**
+	 * action AliasListAjax
+	 *
+	 * @return void
+	 */
+	public function aliasListAjaxAction()
+	{
+		$this->assignListView();
+	}
+
+	/**
+	 * action showQrCode
+	 *
+	 * @return void
+	 */
+	public function showQrCodeAction()
+	{
+		$uid = $this->getArgument('uid');
+
+		/** @var \HFWU\HfwuRedirects\Domain\Model\Redirects $redirect */
+		$redirect =  $this->redirectsRepository->findByUid($uid);
+		if (!empty($redirect)) {
+			$shortUrl = $redirect->getShortUrl();
+			$title = $redirect->getTitle();
+			$siteUrl = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
+			$completeUrl = $siteUrl . $shortUrl;
+			if (isset($this->currentExtensionConfig['qr_imgsize'])) {
+				$size = $this->currentExtensionConfig['qr_imgsize'];
+			} else {
+				$size = 400;
+			}
+			if (isset($this->currentExtensionConfig['qr_padding'])) {
+				$padding = $this->currentExtensionConfig['qr_padding'];
+			} else {
+				$padding = 40;
+			}
+			if (isset($this->currentExtensionConfig['qr_fgcolor'])) {
+				$foregroundColor = $this->currentExtensionConfig['qr_fgcolor'];
+			} else {
+				$foregroundColor = '00308e';
+			}
+
+			$fgColor = \HFWU\HfwuRedirects\Utility\Qr\QrCode::convertHexToRgbColor($foregroundColor);
+			$bgColor = \HFWU\HfwuRedirects\Utility\Qr\QrCode::convertHexToRgbColor('ffffff');
+
+			if ($size > 300) {
+				$errorCorrection = 'high';
+			} elseif ($size > 100) {
+				$errorCorrection = 'medium';
+			} else {
+				$errorCorrection = 'low';
+			}
+
+			/** @var $qrCode \HFWU\HfwuRedirects\Utility\Qr\QrCode */
+			$qrCode = $this->objectManager->get(\HFWU\HfwuRedirects\Utility\Qr\QrCode::class);
+
+			$qrCode->setText($completeUrl)
+				->setSize($size)
+				->setPadding($padding)
+				->setErrorCorrection($errorCorrection)
+				->setForegroundColor($fgColor)
+				->setBackgroundColor($bgColor);
+			$image = $qrCode->get($qrCode::IMAGE_TYPE_PNG);
+
+			$filename = 'qrcode_' . $title . '.png';
+			/** @var $filenameCleaner \TYPO3\CMS\Core\Resource\Driver\LocalDriver */
+			$filenameCleaner = $this->objectManager->get(\TYPO3\CMS\Core\Resource\Driver\LocalDriver::class);
+			$filename = $filenameCleaner->sanitizeFileName($filename);
+
+			$this->response->setHeader('Cache-control', 'public', TRUE);
+			$this->response->setHeader('Content-Description', 'File transfer', TRUE);
+			$this->response->setHeader('Content-Disposition', 'attachment; filename=' . $filename, TRUE);
+			$this->response->setHeader('Content-Length', strlen($image), TRUE);
+
+			$this->response->setHeader('Content-Type', 'image/png', TRUE);
+			$this->response->setHeader('Content-Transfer-Encoding', 'binary', TRUE);
+			$this->response->sendHeaders();
+			print($image);
+			exit();
+		}
+	}
+
+	/**
+	 * action deleteEntry
+	 *
+	 * @return void
+	 */
+	public function deleteEntryAction()
+	{
+		$uid = $this->getArgument('uid');
+		$this->redirectsRepository->removeEntry($uid);
+		$this->objectManager->get(\TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface::class)->persistAll();
+		exit();
+	}
+
 
 	/**
 	 * assign view depending qrlist flag
 	 * @param bool $qrRedirectsOnly
 	 * @return void
 	 */
-	public function assignView()
+	public function assignListView()
 	{
 		$pid = 0;
 
@@ -112,10 +208,10 @@ class RedirectsController extends ActionController
 
 			if (!empty($currentSysfolder)) {
 				/**@var \TYPO3\CMS\Frontend\Page\PageRepository $pageRepository */
-				$pageRepository = $this->objectManager->get('TYPO3\CMS\Frontend\Page\PageRepository');
+				$pageRepository = $this->objectManager->get(\TYPO3\CMS\Frontend\Page\PageRepository::class);
 				/**@var array $pageData */
 				$pageData = $pageRepository->getPage($currentSysfolder);
-				if ($pageData['doktype'] === "254") {
+				if (intval($pageData['doktype']) == 254) {
 					$pid = $currentSysfolder;
 				}
 			}
@@ -141,7 +237,10 @@ class RedirectsController extends ActionController
 			/** @var QueryResultInterface $redirects */
 			$redirects = $this->redirectsRepository->findRedirectsWithSearchWord($filter, $pid, $limit, $admin, $filterTypes);
 			$siteUrl = 'http://' . GeneralUtility::getIndpEnv('HTTP_HOST');
-			GeneralViewUtility::assignViewArguments($this->view, $siteUrl, $returnUrl, $filter, $pid, $limit, $admin, $filterTypes, $redirects);
+			$pluginName = $this->request->getPluginName();
+			$extensionName = $this->request->getControllerExtensionName();
+			$argumentKey = strtolower('tx_' . $extensionName . '_' . $pluginName);
+			GeneralViewUtility::assignViewArguments($this->view, $argumentKey, $siteUrl, $returnUrl, $filter, $pid, $limit, $admin, $filterTypes, $redirects);
 		}
 	}
 
@@ -155,9 +254,10 @@ class RedirectsController extends ActionController
 		$getArguments = $this->request->getArguments();
 		$filter = '';
 		if (is_array($getArguments)) {
-			if (isset($getArguments[$key])) {
+				if (isset($getArguments[$key])) {
 				$filter = $getArguments[$key];
 			}
+
 		}
 		return $filter;
 	}

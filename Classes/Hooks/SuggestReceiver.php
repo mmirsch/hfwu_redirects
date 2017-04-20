@@ -3,7 +3,9 @@ namespace  HFWU\HfwuRedirects\Hooks;
 
 use HFWU\HfwuRedirects\Utility\BackendUtility;
 use HFWU\HfwuRedirects\Utility\ExtensionUtility;
-use TYPO3\CMS\Backend\Form\Element\SuggestDefaultReceiver;
+use TYPO3\CMS\Backend\Form\Wizard\SuggestWizardDefaultReceiver;
+use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Backend\Utility\IconUtility;
@@ -15,7 +17,7 @@ use TYPO3\CMS\Backend\Utility\IconUtility;
  * @package	TYPO3
  * @subpackage	hfwu_redirects
  */
-class SuggestReceiver extends SuggestDefaultReceiver {
+class SuggestReceiver extends SuggestWizardDefaultReceiver {
 
 	/**
 	 * The list of pages that are forbidden to perform the search for records on
@@ -32,6 +34,7 @@ class SuggestReceiver extends SuggestDefaultReceiver {
 	 * @return void
 	 */
 	public function __construct($table, $config) {
+
 		$this->table = $table;
 		$this->config = $config;
 		$extensionConfiguration = ExtensionUtility::getExtensionConfig();
@@ -135,9 +138,8 @@ class SuggestReceiver extends SuggestDefaultReceiver {
 				if (count($rows) > $this->maxItems) {
 					break;
 				}
-				$spriteIcon = IconUtility::getSpriteIconForRecord(
-					$this->table, $row, array('style' => 'margin: 0 4px 0 -20px; padding: 0;')
-				);
+				$this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
+				$spriteIcon = $this->iconFactory->getIconForRecord($this->table, $row, Icon::SIZE_SMALL)->render();
 				$uid = $row['t3ver_oid'] > 0 ? $row['t3ver_oid'] : $row['uid'];
 				$path = $this->getRecordPath($row, $uid);
 				if (strlen($path) > 30) {

@@ -5,24 +5,31 @@
 		<body>
 			<trans-unit id="title.description">
 				<source>Description</source>
+				<target state="translated">Bezeichnung</target>
 			</trans-unit>
 			<trans-unit id="short_url.description">
 				<source>Short Url</source>
+				<target state="translated">shortUrl</target>
 			</trans-unit>
 			<trans-unit id="url_complete.description">
 				<source>Complete Url (TYPO3- page will be ignored)</source>
+				<target state="translated">Url komplett (TYPO3-Seite wird ignoriert)</target>
 			</trans-unit>
 			<trans-unit id="search_word.description">
 				<source>Additional param (e.g. to enable certain accordion)</source>
+				<target state="translated">Suchwort (um Akkordeons aufzuklappen)</target>
 			</trans-unit>
 			<trans-unit id="is_qr_url.description">
 				<source>Entry is Qr-Code</source>
+				<target state="translated">Eintrag ist Qr-Code</target>
 			</trans-unit>
 			<trans-unit id="page.description">
 				<source>TYPO3 page (Please enter ID or page title in search field)</source>
+				<target state="translated">TYPO3 Seite (Bitte rechts im Suchfeld die ID oder den Seitentitel eintragen)</target>
 			</trans-unit>
 			<trans-unit id="redirect_count.description">
 				<source>Number of redirect calls</source>
+				<target state="translated">Anzahl der Aufrufe</target>
 			</trans-unit>
 		</body>
 	</file>

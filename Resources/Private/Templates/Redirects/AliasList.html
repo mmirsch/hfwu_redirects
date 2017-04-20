@@ -13,61 +13,70 @@
 		</f:else>
 	</f:if>
 
-	<f:flashMessages renderMode="div" class="message" />
+<f:comment>
+	<f:flashMessages  />
+</f:comment>
 
 	<f:if condition="{pid}">
 		<f:then>
 			<f:if condition="{redirects}">
 				<f:then>
 					<f:form.hidden id="deleteConfirmationMessage" value="{f:translate(key: 'general.messages.delete_confirmation_message')}" />
-					<f:form.hidden id="pid" value="{pid}" />
-					<f:form.hidden id="site_url" value="{siteUrl}" />
-					<f:form.hidden id="return_url" value="{returnUrl}" />
+					<f:form.hidden id="ajax_url_list" value="{f:uri.action(action: 'aliasListAjax', noCacheHash:'TRUE', controller:'Redirects')}"/>
+					<f:form.hidden id="ajax_url_show_qrcode" value="{f:uri.action(action: 'showQrCode', noCacheHash:'TRUE', controller:'Redirects')}"/>
+					<f:form.hidden id="ajax_url_delete_entry" value="{f:uri.action(action: 'deleteEntry', noCacheHash:'TRUE', controller:'Redirects')}"/>
+					<f:form.hidden id="argument_key" value="{argumentKey}"/>
+					<f:form.hidden class="ajaxParam" additionalAttributes="{data-param-name: 'pid'}" value="{pid}" />
+					<f:form.hidden class="ajaxParam" additionalAttributes="{data-param-name: 'site_url'}" value="{siteUrl}" />
+					<f:form.hidden class="ajaxParam" additionalAttributes="{data-param-name: 'return_url'}" value="{returnUrl}"/>
 
 					<label for="search_filter" class="filter_label">
 						<f:translate key="general.display.filter_search"></f:translate>
 					</label>
-					<input type="text"
+					<f:form.textfield
 						   value="<vh:RawAndRemoveXss>{filter}</vh:RawAndRemoveXss>"
-						   class="ajaxFilter"
+						   class="ajaxFilter ajaxParam ajaxReset"
 						   id="search_filter"
-						   data-url="<f:uri.action action='showListAjax' noCacheHash='TRUE' />"
+						   additionalAttributes="{data-param-name: 'filter', data-default-value: ''}"
 							/>
-<f:comment>
 
-	<f:form.textfield
-			type="input"
-			value="<vh:RawAndRemoveXss>{filter}</vh:RawAndRemoveXss>"
-			class="ajaxFilter"
-			id="search_filter"
-			/>
-
-</f:comment>
 
 					<f:if condition="{admin}">
 						<f:then>
 							<label for="filter_types" class="filter_label">
 								<f:translate key="general.display.filter_types"></f:translate>
 							</label>
-							<f:form.select id="filter_types" value="{filter_types}" options="{
-					all:'{f:translate(key: \'general.display.all\')}',
-					redirects_only:'{f:translate(key: \'general.display.redirects_only\')}',
-					qr_codes_only:'{f:translate(key: \'general.display.qr_codes_only\')}'
-				}"  />
+							<f:form.select
+									id="filter_types"
+									class="ajaxParam ajaxReset"
+									value="{filter_types}"
+									additionalAttributes="{data-param-name: 'filter_types', data-default-value: 'all'}"
+									options="{
+												all:'{f:translate(key: \'general.display.all\')}',
+												redirects_only:'{f:translate(key: \'general.display.redirects_only\')}',
+												qr_codes_only:'{f:translate(key: \'general.display.qr_codes_only\')}'
+											}"
+									/>
 							<label for="limit" class="filter_label">
 								<f:translate key="general.display.filter_limit"></f:translate>
 							</label>
-							<f:form.select id="limit" value="{limit}" options="{
-					99999:'{f:translate(key: \'general.display.show_all_entries\')}',
-					10:'10 {f:translate(key: \'general.display.show_entries\')}',
-					20:'20 {f:translate(key: \'general.display.show_entries\')}',
-					50:'50 {f:translate(key: \'general.display.show_entries\')}',
-					100:'100 {f:translate(key: \'general.display.show_entries\')}'
-				}"  />
+							<f:form.select
+									id="limit"
+									class="ajaxParam ajaxReset"
+									value="{limit}"
+									additionalAttributes="{data-param-name: 'limit', data-default-value: '99999'}"
+									options="{
+												99999:'{f:translate(key: \'general.display.show_all_entries\')}',
+												10:'{f:translate(key: \'general.display.show_entries\', arguments: \'{0: 10}\')}',
+												20:'{f:translate(key: \'general.display.show_entries\', arguments: \'{0: 20}\')}',
+												50:'{f:translate(key: \'general.display.show_entries\', arguments: \'{0: 50}\')}',
+												100:'{f:translate(key: \'general.display.show_entries\', arguments: \'{0: 100}\')}'
+											}"
+									/>
 						</f:then>
 						<f:else>
-							<f:form.hidden id="filter_types" value="qr_codes_only" />
-							<f:form.hidden id="limit" value="{limit}" />
+							<f:form.hidden class="ajaxParam" additionalAttributes="{data-param-name: 'filter_types'}" value="qr_codes_only" />
+							<f:form.hidden class="ajaxParam" additionalAttributes="{data-param-name: 'limit'}" value="{limit}" />
 						</f:else>
 					</f:if>
 					<br />

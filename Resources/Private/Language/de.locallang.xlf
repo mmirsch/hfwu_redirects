@@ -4,117 +4,102 @@
 		<header/>
 		<body>
 			<trans-unit id="redirects-folder">
-				<source>redirects</source>
+				<source>Redirects</source>
+				<target state="translated">Redirects</target>
 			</trans-unit>
 			<trans-unit id="general.display.all">
-				<source>display all</source>
+				<source>Show all</source>
+				<target state="translated">Alle anzeigen</target>
 			</trans-unit>
 			<trans-unit id="general.display.show_all_entries">
-				<source>display all entries</source>
+				<source>Show all entries</source>
+				<target state="translated">Alle Einträge anzeigen</target>
 			</trans-unit>
 			<trans-unit id="general.display.show_entries">
-				<source>display %s entries</source>
+				<source>Show % entries</source>
+				<target state="translated">%s Einträge anzeigen</target>
 			</trans-unit>
 			<trans-unit id="general.display.redirects_only">
 				<source>display redirects only</source>
+				<target state="translated">Nur Redirects anzeigen</target>
 			</trans-unit>
 			<trans-unit id="general.display.qr_codes_only">
 				<source>display qr codes only</source>
+				<target state="translated">Nur QR-Codes anzeigen</target>
 			</trans-unit>
 			<trans-unit id="general.display.filter_search">
 				<source>search entries</source>
+				<target state="translated">Einträge suchen</target>
 			</trans-unit>
 			<trans-unit id="general.display.filter_types">
 				<source>element type</source>
+				<target state="translated">Element-Typ</target>
 			</trans-unit>
 			<trans-unit id="general.display.filter_limit">
 				<source>count</source>
+				<target state="translated">Anzahl</target>
 			</trans-unit>
 			<trans-unit id="general.manage_redirects">
 				<source>manage redirects/qr codes</source>
+				<target state="translated">Redirects/QR-Codes verwalten</target>
 			</trans-unit>
 			<trans-unit id="general.manage_qr_codes">
 				<source>manage qr codes</source>
+				<target state="translated">QR-Codes verwalten</target>
 			</trans-unit>
-
 			<trans-unit id="general.entry.no_redirect_entries">
 				<source>no entries in this folder!</source>
+				<target state="translated">In diesem Verzeichnis gibt es noch keine Einträge!</target>
 			</trans-unit>
 			<trans-unit id="general.entry.create">
 				<source>create new entry</source>
+				<target state="translated">Neuen Eintrag anlegen</target>
 			</trans-unit>
 			<trans-unit id="general.entry.edit">
 				<source>edit entry</source>
+				<target state="translated">Eintrag bearbeiten</target>
 			</trans-unit>
 			<trans-unit id="general.entry.delete">
 				<source>delete entry</source>
+				<target state="translated">Eintrag löschen</target>
 			</trans-unit>
 			<trans-unit id="general.create_qr_code">
 				<source>create qr code</source>
+				<target state="translated">QR-Code erzeugen</target>
 			</trans-unit>
 			<trans-unit id="general.test_redirect">
 				<source>test redirect</source>
+				<target state="translated">Redirect testen</target>
 			</trans-unit>
 			<trans-unit id="general.messages.delete_confirmation_message">
 				<source>do you really want to delete this entry?</source>
+				<target state="translated">Wollen Sie diesen Eintrag wirklich löschen?</target>
 			</trans-unit>
 			<trans-unit id="redirects.columns.title">
 				<source>title</source>
+				<target state="translated">Bezeichnung</target>
 			</trans-unit>
 			<trans-unit id="redirects.columns.shortcut">
 				<source>shortcut</source>
+				<target state="translated">Kürzel</target>
 			</trans-unit>
 			<trans-unit id="redirects.columns.short_url">
 				<source>short URL</source>
+				<target state="translated">Short-URL</target>
 			</trans-unit>
 			<trans-unit id="redirects.columns.target_url">
 				<source>TYPO3 page / target URL</source>
+				<target state="translated">TYPO3-Seite / Ziel-URL</target>
 			</trans-unit>
 			<trans-unit id="redirects.columns.redirect_calls">
 				<source>number of calls</source>
+				<target state="translated">Anzahl Aufrufe</target>
 			</trans-unit>
 			<trans-unit id="redirects.columns.actions">
 				<source>actions</source>
+				<target state="translated">Aktionen</target>
 			</trans-unit>
 
-
-			<trans-unit id="tx_hfwuredirects_domain_model_redirects">
-				<source>Redirects</source>
-			</trans-unit>
-			<trans-unit id="tx_hfwuredirects_domain_model_redirects.title">
-				<source>Bezeichnung</source>
-			</trans-unit>
-			<trans-unit id="tx_hfwuredirects_domain_model_redirects.short_url">
-				<source>Short Url</source>
-			</trans-unit>
-			<trans-unit id="tx_hfwuredirects_domain_model_redirects.url_complete">
-				<source>Url komplett (TYPO3-Seite wird ignoriert)</source>
-			</trans-unit>
-			<trans-unit id="tx_hfwuredirects_domain_model_redirects.search_word">
-				<source>Suchwort (um Akkordeons aufzuklappen)</source>
-			</trans-unit>
-			<trans-unit id="tx_hfwuredirects_domain_model_redirects.is_qr_url">
-				<source>Eintrag ist Qr-Code</source>
-			</trans-unit>
-			<trans-unit id="tx_hfwuredirects_domain_model_redirects.page">
-				<source>TYPO3 Seite (Bitte rechts im Suchfeld die ID oder den Seitentitel eintragen)</source>
-			</trans-unit>
-
-			<trans-unit id="error.no_sysfolder_redirects_chosen">
-				<source>Bitte klicken Sie zunächst einen Systemordner für QR-Codes im Seitenbaum an!</source>
-			</trans-unit>
-			<trans-unit id="error.no_sysfolder_redirects_set">
-				<source>Bitte tragen Sie in den Extension-Einstellungen einen Systemordner für die zentralen Redirects ein!</source>
-			</trans-unit>
-			<trans-unit id="error.no_redirects_pid">
-				<source>Bitte wählen Sie ein Verzeichnis mit QR-Codes/Redirects aus!</source>
-			</trans-unit>
-			<trans-unit id="error.no_qr_pid">
-				<source>Bitte wählen Sie ein Verzeichnis mit QR-Codes aus!</source>
-			</trans-unit>
-			<trans-unit id="error.no_redirect_entries">
-				<source>In diesem Verzeichnis gibt es keine Einträge!</source>
-			</trans-unit>
 		</body>
 	</file>
 </xliff>

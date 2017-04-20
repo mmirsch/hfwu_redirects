@@ -18,6 +18,7 @@ class GeneralViewUtility {
      * Used by redirect controller and ajax dispatcher
      *
      * @param \TYPO3\CMS\Fluid\View\AbstractTemplateView $view
+     * @param string $argumentKey
      * @param string $siteUrl
      * @param string $returnUrl
      * @param string $filter
@@ -27,8 +28,9 @@ class GeneralViewUtility {
      * @param bool $qrcodesOnly
      * @param \TYPO3\CMS\Extbase\Persistence\QueryResultInterface $redirects
      */
-    public static function assignViewArguments($view, $siteUrl, $returnUrl, $filter, $pid, $limit, $admin, $filterTypes,QueryResultInterface $redirects)
+    public static function assignViewArguments($view, $argumentKey, $siteUrl, $returnUrl, $filter, $pid, $limit, $admin, $filterTypes, QueryResultInterface $redirects)
     {
+        $view->assign('argumentKey', $argumentKey);
         $view->assign('siteUrl', $siteUrl);
         $view->assign('returnUrl', $returnUrl);
         $view->assign('filter', $filter);

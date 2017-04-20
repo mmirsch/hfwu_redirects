@@ -5,8 +5,9 @@
 	<table class="tx_hfwuredirects" >
 		<tr>
 			<th class="title"><f:translate key="{ll}redirects.columns.title"></f:translate></th>
+			<th class="short_url"><f:translate key="{ll}redirects.columns.shortcut"></f:translate></th>
 			<th class="short_url"><f:translate key="{ll}redirects.columns.short_url"></f:translate></th>
-			<th class="target_zrl"><f:translate key="{ll}redirects.columns.target_url"></f:translate></th>
+			<th class="target_url"><f:translate key="{ll}redirects.columns.target_url"></f:translate></th>
 			<th class="redirect_calls"><f:translate key="{ll}redirects.columns.redirect_calls"></f:translate></th>
 			<th class="actions"><f:translate key="{ll}redirects.columns.actions"></f:translate></th>
 		</tr>
@@ -14,7 +15,8 @@
 		<f:for each="{redirects}" as="redirect">
 			<tr>
 				<td class="title">{redirect.title}</td>
-				<td class="shortUrl">{redirect.shortUrl}</td>
+				<td class="shortcut">{redirect.shortUrl}</td>
+				<td class="shortUrl">{siteUrl}/{redirect.shortUrl}</td>
 				<f:if condition="{redirect.urlComplete}">
 					<f:then>
 						<td class="pageTitle">{redirect.urlComplete}</td>
